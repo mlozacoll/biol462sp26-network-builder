@@ -118,9 +118,39 @@
   }
   
   function applyModeUI() {
-  if (!IS_VIEW_ONLY) return;
+  // If not view-only, restore normal UI/tips and exit
+  if (!IS_VIEW_ONLY) {
+    // Make sure editor controls are visible (in case you toggled modes in-session)
+    const idsToShow = [
+      "source","target","itype","autolayout","pmid","note",
+      "addEdge","clear","deleteSelected","exportJson","importJson","doImport","jsonBox"
+    ];
+    for (const id of idsToShow) {
+      const el = document.getElementById(id);
+      if (el) el.style.display = "";
+    }
+    // show labels again (best-effort)
+    const labels = document.querySelectorAll('label[for="source"],label[for="target"],label[for="itype"],label[for="autolayout"],label[for="pmid"],label[for="note"]');
+    labels.forEach(l => l.style.display = "");
+    
+    // restore original tip copy (what you had before)
+    const tipEl = document.querySelector('.hint .small');
+    if (tipEl) {
+      tipEl.innerHTML = `
+        Tips:
+        <ul>
+          <li>Nodes are auto-created when you add an interaction.</li>
+          <li>Hover edges to see PMIDs in Operations / Details.</li>
+          <li>Export JSON to share the “official” class network.</li>
+        </ul>
+      `;
+    }
 
-  // Hide inputs + buttons that edit the network
+    setStatusText(initialElements.length ? "Loaded saved network from this browser." : "Ready.");
+    return;
+  }
+
+  // VIEW-ONLY: hide editing controls
   const idsToHide = [
     "source","target","itype","autolayout","pmid","note",
     "addEdge","clear","deleteSelected","exportJson","importJson","doImport","jsonBox"
@@ -131,12 +161,26 @@
     if (el) el.style.display = "none";
   }
 
-  // Also hide their labels (best-effort)
+  // hide their labels (best-effort)
   const labels = document.querySelectorAll('label[for="source"],label[for="target"],label[for="itype"],label[for="autolayout"],label[for="pmid"],label[for="note"]');
   labels.forEach(l => l.style.display = "none");
 
+  // replace left-panel hint copy with view-only instructions
+  const tipEl = document.querySelector('.hint .small');
+  if (tipEl) {
+    tipEl.innerHTML = `
+      <p>
+        You are viewing a genetic network based on published research.
+        If you would like to learn more about the evidence supporting the mapped connections,
+        click on any corresponding arrow or T-bar and follow the PMID link to the corresponding PubMed page
+        in the window below.
+      </p>
+    `;
+  }
+
   setStatusText("View-only mode (editing disabled).");
 }
+
 
   function normGene(s) {
     return (s || "").trim();
