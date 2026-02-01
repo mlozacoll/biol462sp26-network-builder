@@ -191,21 +191,49 @@
     layout: { name: "grid" }
   });
 
-  function runLayout() {
-    const layoutName = (cytoscapeDagre ? "dagre" : "cose");
-    const layout = cy.layout({
-      name: layoutName,
-      animate: true,
-      animationDuration: 350,
-      rankDir: "LR",
-      nodeSep: 40,
-      edgeSep: 10,
-      rankSep: 60
-    });
-    layout.run();
+  // Restore saved positions (if any)
+if (saved?.positions?.length) {
+  for (const p of saved.positions) {
+    const n = cy.getElementById(p.id);
+    if (!n.empty() && p.position) {
+      n.position(p.position);
+      n.lock();   // lock briefly to prevent layout from moving it immediately
+      n.unlock(); // unlock so you can still drag it
+    }
   }
+}
 
-  runLayout();
+  if (saved?.positions?.length) {
+  const sel = document.getElementById("autolayout");
+  if (sel) sel.value = "off";
+}
+
+  cy.on("dragfree", "node", () => {
+  save();
+});
+
+  function autoLayoutEnabled() {
+  const sel = document.getElementById("autolayout");
+  return !sel || sel.value === "on";
+}
+
+function runLayout() {
+  if (!autoLayoutEnabled()) return;
+
+  const layoutName = (cytoscapeDagre ? "dagre" : "cose");
+  const layout = cy.layout({
+    name: layoutName,
+    animate: true,
+    animationDuration: 350,
+    rankDir: "LR",
+    nodeSep: 40,
+    edgeSep: 10,
+    rankSep: 60
+  });
+  layout.run();
+}
+
+  if (!saved?.positions?.length) runLayout();
 
   // --- Tooltips on edges ---
   function makeEdgeTooltip(edge) {
@@ -268,9 +296,19 @@
 
   // --- Persistence ---
   function save() {
-    const payload = { elements: cy.json().elements };
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
-  }
+  // Capture node positions so manual arrangement persists
+  const elements = cy.json().elements;
+
+  // Ensure positions are stored explicitly
+  const nodes = cy.nodes().map(n => ({
+    id: n.id(),
+    position: { ...n.position() }
+  }));
+
+  const payload = { elements, positions: nodes };
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
+}
+
 
   // --- Ensure node exists ---
   function ensureNode(gene) {
@@ -343,14 +381,21 @@
   const doImportBtn = document.getElementById("doImport");
 
   document.getElementById("exportJson").addEventListener("click", () => {
-    const payload = { elements: cy.json().elements };
-    jsonBox.style.display = "block";
-    doImportBtn.style.display = "none";
-    jsonBox.value = JSON.stringify(payload, null, 2);
-    jsonBox.focus();
-    jsonBox.select();
-    setStatus("Exported JSON below. Copy it to share/save.");
-  });
+  const elements = cy.json().elements;
+  const positions = cy.nodes().map(n => ({
+    id: n.id(),
+    position: { ...n.position() }
+  }));
+
+  const payload = { elements, positions };
+
+  jsonBox.style.display = "block";
+  doImportBtn.style.display = "none";
+  jsonBox.value = JSON.stringify(payload, null, 2);
+  jsonBox.focus();
+  jsonBox.select();
+  setStatus("Exported JSON below. Copy it to share/save.");
+});
 
   document.getElementById("importJson").addEventListener("click", () => {
     jsonBox.style.display = "block";
@@ -361,18 +406,29 @@
   });
 
   doImportBtn.addEventListener("click", () => {
-    try {
-      const payload = JSON.parse(jsonBox.value);
-      if (!payload?.elements) throw new Error("Missing 'elements' field.");
-      cy.elements().remove();
-      cy.add(payload.elements);
+  try {
+    const payload = JSON.parse(jsonBox.value);
+    if (!payload?.elements) throw new Error("Missing 'elements' field.");
+
+    cy.elements().remove();
+    cy.add(payload.elements);
+
+    // If imported JSON includes positions, apply them
+    if (payload?.positions?.length) {
+      for (const p of payload.positions) {
+        const n = cy.getElementById(p.id);
+        if (!n.empty() && p.position) n.position(p.position);
+      }
+    } else {
       runLayout();
-      save();
-      setStatus("Imported network from JSON.");
-    } catch (e) {
-      setStatus("Import failed: " + e.message);
     }
-  });
+
+    save();
+    setStatus("Imported network from JSON.");
+  } catch (e) {
+    setStatus("Import failed: " + e.message);
+  }
+});
 
   setStatus(initialElements.length ? "Loaded saved network from this browser." : "Ready.");
 </script>
