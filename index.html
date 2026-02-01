@@ -1,0 +1,375 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Genetic Network Builder</title>
+
+  <!-- Cytoscape -->
+  <script src="https://unpkg.com/cytoscape@3.28.1/dist/cytoscape.min.js"></script>
+
+  <!-- Popper + Tippy for tooltips -->
+  <script src="https://unpkg.com/@popperjs/core@2"></script>
+  <script src="https://unpkg.com/tippy.js@6"></script>
+  <link rel="stylesheet" href="https://unpkg.com/tippy.js@6/animations/scale.css"/>
+
+  <!-- Optional layout (nice directed layout). If blocked, it falls back gracefully. -->
+  <script src="https://unpkg.com/dagre@0.8.5/dist/dagre.min.js"></script>
+  <script src="https://unpkg.com/cytoscape-dagre@2.5.0/cytoscape-dagre.js"></script>
+
+  <style>
+    body { margin: 0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; }
+    .wrap { display: grid; grid-template-columns: 360px 1fr; height: 100vh; }
+    .panel {
+      padding: 14px; border-right: 1px solid #ddd; background: #fafafa;
+      overflow: auto;
+    }
+    .panel h1 { font-size: 18px; margin: 0 0 10px; }
+    label { display: block; font-size: 12px; margin: 10px 0 4px; }
+    input, select, textarea, button {
+      width: 100%; box-sizing: border-box; padding: 10px; border: 1px solid #ccc; border-radius: 10px;
+      font-size: 14px;
+    }
+    textarea { min-height: 70px; resize: vertical; }
+    .row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .btnrow { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
+    .hint { font-size: 12px; color: #555; margin-top: 10px; line-height: 1.35; }
+    .status { margin-top: 10px; font-size: 12px; padding: 10px; border-radius: 10px; background: #fff; border: 1px solid #eee; }
+    #cy { width: 100%; height: 100%; }
+    .small { font-size: 12px; }
+    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
+    button { cursor: pointer; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="panel">
+      <h1>Genetic Network Builder</h1>
+
+      <div class="row">
+        <div>
+          <label for="source">Source gene</label>
+          <input id="source" placeholder="e.g., X" />
+        </div>
+        <div>
+          <label for="target">Target gene</label>
+          <input id="target" placeholder="e.g., Y" />
+        </div>
+      </div>
+
+      <label for="itype">Interaction type</label>
+      <select id="itype">
+        <option value="activates">activates</option>
+        <option value="inhibits">inhibits</option>
+      </select>
+
+      <label for="pmid">Evidence PMID</label>
+      <input id="pmid" placeholder="e.g., 12345678" />
+
+      <label for="note">Optional note (shown in tooltip)</label>
+      <textarea id="note" placeholder="Short evidence note (optional)"></textarea>
+
+      <div class="btnrow">
+        <button id="addEdge">Add / Update edge</button>
+        <button id="clear">Clear network</button>
+      </div>
+
+      <div class="btnrow">
+        <button id="exportJson">Export JSON</button>
+        <button id="importJson">Import JSON</button>
+      </div>
+
+      <div class="hint">
+        <div class="small">
+          Tips:
+          <ul>
+            <li>Nodes are auto-created when you add an interaction.</li>
+            <li>Hover edges to see PMIDs.</li>
+            <li>Export JSON to share the “official” class network.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="status" id="status">Ready.</div>
+      <textarea class="mono" id="jsonBox" style="margin-top:10px; display:none;" placeholder="Paste JSON here to import, or copy exported JSON."></textarea>
+      <button id="doImport" style="margin-top:10px; display:none;">Load pasted JSON</button>
+    </div>
+
+    <div id="cy"></div>
+  </div>
+
+<script>
+  // --- Utilities ---
+  const STORAGE_KEY = "genetic_network_v1";
+
+  function normGene(s) {
+    return (s || "").trim();
+  }
+
+  function isValidPmid(s) {
+    // PubMed IDs are digits; length varies. We'll accept 1..10 digits to be permissive.
+    return /^[0-9]{1,10}$/.test((s || "").trim());
+  }
+
+  function setStatus(msg) {
+    document.getElementById("status").textContent = msg;
+  }
+
+  function edgeId(src, tgt, type) {
+    return `e:${src}->${tgt}:${type}`;
+  }
+
+  // --- Load initial graph from localStorage (or empty) ---
+  let saved = null;
+  try {
+    saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "null");
+  } catch (_) {}
+
+  const initialElements = saved?.elements || [];
+
+  // --- Cytoscape init ---
+  if (typeof cytoscapeDagre !== "undefined") {
+    // plugin loaded
+  }
+
+  const cy = cytoscape({
+    container: document.getElementById("cy"),
+    elements: initialElements,
+    style: [
+      {
+        selector: "node",
+        style: {
+          "shape": "round-rectangle",
+          "background-opacity": 0,
+          "border-width": 2,
+          "border-color": "#333",
+          "label": "data(label)",
+          "text-valign": "center",
+          "text-halign": "center",
+          "padding": "10px",
+          "font-size": 14
+        }
+      },
+      {
+        selector: "edge",
+        style: {
+          "curve-style": "bezier",
+          "width": 2,
+          "line-color": "#333",
+          "target-arrow-color": "#333",
+          "target-arrow-shape": "triangle",
+          "arrow-scale": 1.1,
+          "label": "",
+        }
+      },
+      {
+        selector: 'edge[type = "inhibits"]',
+        style: {
+          "target-arrow-shape": "tee"
+        }
+      },
+      {
+        selector: 'edge[type = "activates"]',
+        style: {
+          "target-arrow-shape": "triangle"
+        }
+      },
+      {
+        selector: ":selected",
+        style: {
+          "border-color": "#0b5fff",
+          "line-color": "#0b5fff",
+          "target-arrow-color": "#0b5fff"
+        }
+      }
+    ],
+    layout: { name: "grid" }
+  });
+
+  function runLayout() {
+    const layoutName = (cytoscapeDagre ? "dagre" : "cose");
+    const layout = cy.layout({
+      name: layoutName,
+      animate: true,
+      animationDuration: 350,
+      rankDir: "LR",
+      nodeSep: 40,
+      edgeSep: 10,
+      rankSep: 60
+    });
+    layout.run();
+  }
+
+  runLayout();
+
+  // --- Tooltips on edges ---
+  function makeEdgeTooltip(edge) {
+    const pmids = edge.data("pmids") || [];
+    const note = edge.data("note") || "";
+    const src = edge.source().data("label");
+    const tgt = edge.target().data("label");
+    const type = edge.data("type");
+
+    const html = `
+      <div style="font-size:12px; line-height:1.35;">
+        <div><b>${src}</b> ${type} <b>${tgt}</b></div>
+        <div style="margin-top:6px;"><b>PMID:</b> ${pmids.length ? pmids.join(", ") : "(none)"}</div>
+        ${note ? `<div style="margin-top:6px;"><b>Note:</b> ${escapeHtml(note)}</div>` : ""}
+      </div>
+    `;
+
+    // Create a virtual element for tippy using Popper reference
+    const ref = edge.popperRef();
+    const dummyDomEle = document.createElement("div");
+
+    const tip = tippy(dummyDomEle, {
+      getReferenceClientRect: ref.getBoundingClientRect,
+      content: html,
+      allowHTML: true,
+      trigger: "manual",
+      placement: "top",
+      animation: "scale",
+      interactive: true
+    });
+
+    return tip;
+  }
+
+  // Simple HTML escaping for notes
+  function escapeHtml(str) {
+    return String(str)
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#039;");
+  }
+
+  let activeTip = null;
+
+  cy.on("mouseover", "edge", (evt) => {
+    const e = evt.target;
+    if (activeTip) activeTip.destroy();
+    activeTip = makeEdgeTooltip(e);
+    activeTip.show();
+  });
+
+  cy.on("mouseout", "edge", () => {
+    if (activeTip) {
+      activeTip.destroy();
+      activeTip = null;
+    }
+  });
+
+  // --- Persistence ---
+  function save() {
+    const payload = { elements: cy.json().elements };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
+  }
+
+  // --- Ensure node exists ---
+  function ensureNode(gene) {
+    const id = `n:${gene}`;
+    let n = cy.getElementById(id);
+    if (n.empty()) {
+      cy.add({ group: "nodes", data: { id, label: gene } });
+    }
+    return id;
+  }
+
+  // --- Add/update edge logic ---
+  document.getElementById("addEdge").addEventListener("click", () => {
+    const src = normGene(document.getElementById("source").value);
+    const tgt = normGene(document.getElementById("target").value);
+    const type = document.getElementById("itype").value;
+    const pmid = (document.getElementById("pmid").value || "").trim();
+    const note = (document.getElementById("note").value || "").trim();
+
+    if (!src || !tgt) {
+      setStatus("Please enter both source and target genes.");
+      return;
+    }
+    if (pmid && !isValidPmid(pmid)) {
+      setStatus("PMID should be digits only (e.g., 12345678).");
+      return;
+    }
+
+    const srcId = ensureNode(src);
+    const tgtId = ensureNode(tgt);
+
+    const eid = edgeId(src, tgt, type);
+    let edge = cy.getElementById(eid);
+
+    if (edge.empty()) {
+      cy.add({
+        group: "edges",
+        data: {
+          id: eid,
+          source: srcId,
+          target: tgtId,
+          type,
+          pmids: pmid ? [pmid] : [],
+          note
+        }
+      });
+      setStatus(`Added: ${src} ${type} ${tgt}${pmid ? ` (PMID ${pmid})` : ""}`);
+    } else {
+      // Update: add PMID to list if new; update note if provided
+      const pmids = edge.data("pmids") || [];
+      if (pmid && !pmids.includes(pmid)) pmids.push(pmid);
+      edge.data("pmids", pmids);
+      if (note) edge.data("note", note);
+      setStatus(`Updated edge. PMID list: ${pmids.join(", ") || "(none)"}`);
+    }
+
+    runLayout();
+    save();
+  });
+
+  // --- Clear network ---
+  document.getElementById("clear").addEventListener("click", () => {
+    cy.elements().remove();
+    save();
+    setStatus("Cleared network.");
+  });
+
+  // --- Export / Import ---
+  const jsonBox = document.getElementById("jsonBox");
+  const doImportBtn = document.getElementById("doImport");
+
+  document.getElementById("exportJson").addEventListener("click", () => {
+    const payload = { elements: cy.json().elements };
+    jsonBox.style.display = "block";
+    doImportBtn.style.display = "none";
+    jsonBox.value = JSON.stringify(payload, null, 2);
+    jsonBox.focus();
+    jsonBox.select();
+    setStatus("Exported JSON below. Copy it to share/save.");
+  });
+
+  document.getElementById("importJson").addEventListener("click", () => {
+    jsonBox.style.display = "block";
+    doImportBtn.style.display = "block";
+    jsonBox.value = "";
+    setStatus("Paste JSON below, then click 'Load pasted JSON'.");
+    jsonBox.focus();
+  });
+
+  doImportBtn.addEventListener("click", () => {
+    try {
+      const payload = JSON.parse(jsonBox.value);
+      if (!payload?.elements) throw new Error("Missing 'elements' field.");
+      cy.elements().remove();
+      cy.add(payload.elements);
+      runLayout();
+      save();
+      setStatus("Imported network from JSON.");
+    } catch (e) {
+      setStatus("Import failed: " + e.message);
+    }
+  });
+
+  setStatus(initialElements.length ? "Loaded saved network from this browser." : "Ready.");
+</script>
+</body>
+</html>
