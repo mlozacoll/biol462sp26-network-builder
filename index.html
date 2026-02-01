@@ -330,41 +330,41 @@ function runLayout() {
 
   // --- Tooltips on edges ---
   function makeEdgeTooltip(edge) {
-    const pmids = edge.data("pmids") || [];
-    const note = edge.data("note") || "";
-    const src = edge.source().data("label");
-    const tgt = edge.target().data("label");
-    const type = edge.data("type");
+  const pmids = edge.data("pmids") || [];
+  const note  = edge.data("note") || "";
+  const src   = edge.source().data("label");
+  const tgt   = edge.target().data("label");
+  const type  = edge.data("type");
 
-    const html = `
-      <div style="font-size:12px; line-height:1.35;">
-        <div><b>${escapeHtml(src)}</b> ${escapeHtml(type)} <b>${escapeHtml(tgt)}</b></div>
-        <div style="margin-top:6px;"><b>PMID:</b> ${pmids.length ? pmids.map(p => pmidLink(p)).join(", ") : "(none)"}</div>
-        ${note ? `<div style="margin-top:6px;"><b>Note:</b> ${escapeHtml(note)}</div>` : ""}
-      </div>
-    `;
-    
-    // Create a virtual element for tippy using Popper reference
-    const ref = edge.popperRef();
-    const dummyDomEle = document.createElement("div");
-    document.body.appendChild(dummyDomEle);
+  const html = `
+    <div style="font-size:12px; line-height:1.35;">
+      <div><b>${escapeHtml(src)}</b> ${escapeHtml(type)} <b>${escapeHtml(tgt)}</b></div>
+      <div style="margin-top:6px;"><b>PMID:</b> ${
+        pmids.length ? pmids.map(p => pmidLink(p)).join(", ") : "(none)"
+      }</div>
+      ${note ? `<div style="margin-top:6px;"><b>Note:</b> ${escapeHtml(note)}</div>` : ""}
+    </div>
+  `;
 
-    const tip = tippy(dummyDomEle, { ... })[0];
-    tip._dummy = dummyDomEle;
-    return tip;
+  const ref = edge.popperRef();
+  const dummyDomEle = document.createElement("div");
+  document.body.appendChild(dummyDomEle);
 
-    const tip = tippy(dummyDomEle, {
-      getReferenceClientRect: ref.getBoundingClientRect,
-      content: html,
-      allowHTML: true,
-      trigger: "manual",
-      placement: "top",
-      animation: "scale",
-      interactive: true
-    });
+  const tip = tippy(dummyDomEle, {
+    getReferenceClientRect: ref.getBoundingClientRect,
+    content: html,
+    allowHTML: true,
+    trigger: "manual",
+    placement: "top",
+    animation: "scale",
+    interactive: true,
+    appendTo: () => document.body,
+    hideOnClick: false
+  })[0];
 
-    return tip;
-  }
+  tip._dummy = dummyDomEle; // so we can clean up later
+  return tip;
+}
   
   function pmidLink(pmid) {
       const clean = String(pmid).trim();
@@ -405,17 +405,14 @@ function destroyTipSoon() {
 
 function showEdgeTip(edge) {
   clearHideTimer();
-  if (activeTip) activeTip.destroy();
+  if (activeTip) {
+    const d = activeTip._dummy;
+    activeTip.destroy();
+    if (d && d.parentNode) d.parentNode.removeChild(d);
+  }
+
   activeTip = makeEdgeTooltip(edge);
 
-  // Keep it clickable + on top of Cytoscape canvas
-  activeTip.setProps({
-    appendTo: () => document.body,
-    interactive: true,
-    hideOnClick: false
-  });
-
-  // If you move the mouse into the tooltip, don’t kill it
   activeTip.popper.addEventListener("mouseenter", clearHideTimer);
   activeTip.popper.addEventListener("mouseleave", destroyTipSoon);
 
