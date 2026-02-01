@@ -221,7 +221,10 @@
     ],
     layout: { name: "grid" }
   });
-
+  
+  // Prevent edges from ever being “grabbed”
+  cy.edges().ungrabify();
+  
   if (IS_VIEW_ONLY) {
     cy.nodes().ungrabify();
     cy.panningEnabled(true);
