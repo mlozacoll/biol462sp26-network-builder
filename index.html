@@ -374,22 +374,62 @@ function runLayout() {
       .replaceAll("'", "&#039;");
   }
 
-  let activeTip = null;
+let activeTip = null;
+let hideTimer = null;
 
-  cy.on("mouseover", "edge", (evt) => {
-    const e = evt.target;
-    if (activeTip) activeTip.destroy();
-    activeTip = makeEdgeTooltip(e);
-    activeTip.show();
-  });
+function clearHideTimer() {
+  if (hideTimer) clearTimeout(hideTimer);
+  hideTimer = null;
+}
 
-  cy.on("mouseout", "edge", () => {
+function destroyTipSoon() {
+  clearHideTimer();
+  hideTimer = setTimeout(() => {
     if (activeTip) {
       activeTip.destroy();
       activeTip = null;
     }
+  }, 250);
+}
+
+function showEdgeTip(edge) {
+  clearHideTimer();
+  if (activeTip) activeTip.destroy();
+  activeTip = makeEdgeTooltip(edge);
+
+  // Keep it clickable + on top of Cytoscape canvas
+  activeTip.setProps({
+    appendTo: () => document.body,
+    interactive: true,
+    hideOnClick: false
   });
 
+  // If you move the mouse into the tooltip, don’t kill it
+  activeTip.popper.addEventListener("mouseenter", clearHideTimer);
+  activeTip.popper.addEventListener("mouseleave", destroyTipSoon);
+
+  activeTip.show();
+}
+
+// Nice-to-have: click/tap edge shows tooltip too (helps trackpads + touch)
+cy.on("tap", "edge", (evt) => {
+  const e = evt.target;
+
+  // Update status line
+  const src = e.source().data("label");
+  const tgt = e.target().data("label");
+  const type = e.data("type");
+  const pmids = e.data("pmids") || [];
+  setStatus(`${src} ${type} ${tgt}${pmids.length ? `: PMID ${pmids.join(", ")}` : ""}`);
+
+  // Show tooltip (with clickable PMID links)
+  showEdgeTip(e);
+});
+
+// Click on empty space closes it
+cy.on("tap", (evt) => {
+  if (evt.target === cy) destroyTipSoon();
+});
   
   // --- Ensure node exists ---
   function ensureNode(gene) {
