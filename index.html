@@ -420,24 +420,20 @@ function showEdgeTip(edge) {
 }
 
 // Nice-to-have: click/tap edge shows tooltip too (helps trackpads + touch)
-cy.on("tap", "edge", (evt) => {
+cy.on("click", "edge", (evt) => {
   const e = evt.target;
-
   const src = e.source().data("label");
   const tgt = e.target().data("label");
   const type = e.data("type");
   const pmids = e.data("pmids") || [];
 
-  const pmidHtml = pmids.length
-    ? pmids.map(p => pmidLink(p)).join(", ")
-    : "(none)";
+  const pmidHtml = pmids.length ? pmids.map(p => pmidLink(p)).join(", ") : "(none)";
+  setStatusHtml(`<b>${escapeHtml(src)}</b> ${escapeHtml(type)} <b>${escapeHtml(tgt)}</b>: PMID ${pmidHtml}`);
 
-  setStatusHtml(
-    `<b>${escapeHtml(src)}</b> ${escapeHtml(type)} <b>${escapeHtml(tgt)}</b>: PMID ${pmidHtml}`
-  );
-
-  showEdgeTip(e);
+  // key line: “unlatch” anything that feels grabbed
+  cy.trigger("free");
 });
+
 
 
 // Click on empty space closes it
