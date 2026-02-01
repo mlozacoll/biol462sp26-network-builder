@@ -8,11 +8,6 @@
   <!-- Cytoscape -->
   <script src="https://unpkg.com/cytoscape@3.28.1/dist/cytoscape.min.js"></script>
 
-  <!-- Popper + Tippy for tooltips -->
-  <script src="https://unpkg.com/@popperjs/core@2"></script>
-  <script src="https://unpkg.com/tippy.js@6"></script>
-  <link rel="stylesheet" href="https://unpkg.com/tippy.js@6/animations/scale.css"/>
-
   <!-- Optional layout (nice directed layout). If blocked, it falls back gracefully. -->
   <script src="https://unpkg.com/dagre@0.8.5/dist/dagre.min.js"></script>
   <script src="https://unpkg.com/cytoscape-dagre@2.5.0/cytoscape-dagre.js"></script>
@@ -71,7 +66,7 @@
       <label for="pmid">Evidence PMID</label>
       <input id="pmid" placeholder="e.g., 12345678" />
 
-      <label for="note">Optional note (shown in tooltip)</label>
+      <label for="note">Optional note (shown in Operation / Details)</label>
       <textarea id="note" placeholder="Short evidence note (optional)"></textarea>
 
       <div class="btnrow">
@@ -93,13 +88,14 @@
           Tips:
           <ul>
             <li>Nodes are auto-created when you add an interaction.</li>
-            <li>Hover edges to see PMIDs.</li>
+            <li>Click edges to see PMIDs in Operations / Details.</li>
             <li>Export JSON to share the “official” class network.</li>
           </ul>
         </div>
       </div>
 
       <div class="status" id="status">Ready.</div>
+      <label for="note">Operations / Details</label>
       <textarea class="mono" id="jsonBox" style="margin-top:10px; display:none;" placeholder="Paste JSON here to import, or copy exported JSON."></textarea>
       <button id="doImport" style="margin-top:10px; display:none;">Load pasted JSON</button>
     </div>
@@ -331,119 +327,47 @@ function runLayout() {
 
   if (!saved?.positions?.length) runLayout();
 
-  // --- Tooltips on edges ---
-  function makeEdgeTooltip(edge) {
-  const pmids = edge.data("pmids") || [];
-  const note  = edge.data("note") || "";
-  const src   = edge.source().data("label");
-  const tgt   = edge.target().data("label");
-  const type  = edge.data("type");
-
-  const html = `
-    <div style="font-size:12px; line-height:1.35;">
-      <div><b>${escapeHtml(src)}</b> ${escapeHtml(type)} <b>${escapeHtml(tgt)}</b></div>
-      <div style="margin-top:6px;"><b>PMID:</b> ${
-        pmids.length ? pmids.map(p => pmidLink(p)).join(", ") : "(none)"
-      }</div>
-      ${note ? `<div style="margin-top:6px;"><b>Note:</b> ${escapeHtml(note)}</div>` : ""}
-    </div>
-  `;
-
-  const ref = edge.popperRef();
-  const dummyDomEle = document.createElement("div");
-  document.body.appendChild(dummyDomEle);
-
-  const tip = tippy(dummyDomEle, {
-    getReferenceClientRect: ref.getBoundingClientRect,
-    content: html,
-    allowHTML: true,
-    trigger: "manual",
-    placement: "top",
-    animation: "scale",
-    interactive: true,
-    appendTo: () => document.body,
-    hideOnClick: false
-  })[0];
-
-  tip._dummy = dummyDomEle; // so we can clean up later
-  return tip;
-}
-  
-  function pmidLink(pmid) {
-      const clean = String(pmid).trim();
-      const url = `https://pubmed.ncbi.nlm.nih.gov/${encodeURIComponent(clean)}/`;
-      // Escape the visible text, but keep the anchor HTML
-      return `<a href="${url}" target="_blank" rel="noopener noreferrer">${escapeHtml(clean)}</a>`;
-    }
-
-  // Simple HTML escaping for notes
-  function escapeHtml(str) {
-    return String(str)
-      .replaceAll("&", "&amp;")
-      .replaceAll("<", "&lt;")
-      .replaceAll(">", "&gt;")
-      .replaceAll('"', "&quot;")
-      .replaceAll("'", "&#039;");
-  }
-
-let activeTip = null;
-let hideTimer = null;
-
-function clearHideTimer() {
-  if (hideTimer) clearTimeout(hideTimer);
-  hideTimer = null;
+// --- Activate PMID links
+function pmidLink(pmid) {
+  const clean = String(pmid).trim();
+  const url = `https://pubmed.ncbi.nlm.nih.gov/${encodeURIComponent(clean)}/`;
+  // Escape the visible text, but keep the anchor HTML
+  return `<a href="${url}" target="_blank" rel="noopener noreferrer">${escapeHtml(clean)}</a>`;
 }
 
-function destroyTipSoon() {
-  clearHideTimer();
-  hideTimer = setTimeout(() => {
-    if (activeTip) {
-      const d = activeTip._dummy;
-      activeTip.destroy();
-      if (d && d.parentNode) d.parentNode.removeChild(d);
-      activeTip = null;
-    }
-  }, 250);
+// Simple HTML escaping for notes
+function escapeHtml(str) {
+  return String(str)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
 }
 
-function showEdgeTip(edge) {
-  clearHideTimer();
-  if (activeTip) {
-    const d = activeTip._dummy;
-    activeTip.destroy();
-    if (d && d.parentNode) d.parentNode.removeChild(d);
-  }
-
-  activeTip = makeEdgeTooltip(edge);
-
-  activeTip.popper.addEventListener("mouseenter", clearHideTimer);
-  activeTip.popper.addEventListener("mouseleave", destroyTipSoon);
-
-  activeTip.show();
-}
-
-// Nice-to-have: click/tap edge shows tooltip too (helps trackpads + touch)
+// Nice-to-have: click on edge shows PMID in status window
 cy.on("click", "edge", (evt) => {
   const e = evt.target;
-  const src = e.source().data("label");
-  const tgt = e.target().data("label");
+
+  const src  = e.source().data("label");
+  const tgt  = e.target().data("label");
   const type = e.data("type");
+  const note = e.data("note") || "";
   const pmids = e.data("pmids") || [];
 
-  const pmidHtml = pmids.length ? pmids.map(p => pmidLink(p)).join(", ") : "(none)";
-  setStatusHtml(`<b>${escapeHtml(src)}</b> ${escapeHtml(type)} <b>${escapeHtml(tgt)}</b>: PMID ${pmidHtml}`);
+  const pmidHtml = pmids.length
+    ? pmids.map(p => pmidLink(p)).join(", ")
+    : "(none)";
 
-  // key line: “unlatch” anything that feels grabbed
-  cy.trigger("free");
+  setStatusHtml(`
+    <div style="line-height:1.35;">
+      <div><b>${escapeHtml(src)}</b> ${escapeHtml(type)} <b>${escapeHtml(tgt)}</b></div>
+      <div style="margin-top:6px;"><b>PMID:</b> ${pmidHtml}</div>
+      ${note ? `<div style="margin-top:6px;"><b>Note:</b> ${escapeHtml(note)}</div>` : ""}
+    </div>
+  `);
 });
 
-
-
-// Click on empty space closes it
-cy.on("tap", (evt) => {
-  if (evt.target === cy) destroyTipSoon();
-});
-  
   // --- Ensure node exists ---
   function ensureNode(gene) {
     const id = `n:${gene}`;
