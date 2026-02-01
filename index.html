@@ -193,18 +193,31 @@
 
 function save() {
   const elements = cy.json().elements;
-  const nodes = cy.nodes().map(n => ({
+
+  const positions = cy.nodes().map(n => ({
     id: n.id(),
     position: { ...n.position() }
   }));
-  const payload = { elements, positions: nodes };
+
+  const viewport = {
+    zoom: cy.zoom(),
+    pan: { ...cy.pan() }
+  };
+
+  const payload = { elements, positions, viewport };
   localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
 }
 
+let saveTimer = null;
+function saveSoon() {
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(save, 150);
+}
+
 // Save whenever any node moves
-cy.on("position", "node", () => {
-  save();
-});
+cy.on("position", "node", saveSoon);
+cy.on("zoom pan", saveSoon);
+
 
   // Restore saved positions (if any)
 if (saved?.positions?.length) {
@@ -212,8 +225,6 @@ if (saved?.positions?.length) {
     const n = cy.getElementById(p.id);
     if (!n.empty() && p.position) {
       n.position(p.position);
-      n.lock();   // lock briefly to prevent layout from moving it immediately
-      n.unlock(); // unlock so you can still drag it
     }
   }
 }
@@ -226,6 +237,14 @@ if (saved?.positions?.length) {
   function autoLayoutEnabled() {
   const sel = document.getElementById("autolayout");
   return !sel || sel.value === "on";
+}
+
+  if (saved?.viewport) {
+  if (typeof saved.viewport.zoom === "number") cy.zoom(saved.viewport.zoom);
+  if (saved.viewport.pan) cy.pan(saved.viewport.pan);
+} else {
+  // If no saved viewport, fit everything nicely
+  cy.fit(undefined, 40); // padding
 }
 
 function runLayout() {
@@ -382,8 +401,8 @@ function runLayout() {
     id: n.id(),
     position: { ...n.position() }
   }));
-
-  const payload = { elements, positions };
+  const viewport = { zoom: cy.zoom(), pan: { ...cy.pan() } };
+  const payload = { elements, positions, viewport };
 
   jsonBox.style.display = "block";
   doImportBtn.style.display = "none";
