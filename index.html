@@ -113,8 +113,12 @@
   const MODE = new URLSearchParams(window.location.search).get("mode") || "edit";
   const IS_VIEW_ONLY = (MODE.toLowerCase() === "view");
 
-  function setStatus(msg) {
-    document.getElementById("status").textContent = msg;
+  function setStatusText(msg) {
+  document.getElementById("status").textContent = msg;
+  }
+
+  function setStatusHtml(html) {
+  document.getElementById("status").innerHTML = html;
   }
   
   function applyModeUI() {
@@ -135,7 +139,7 @@
   const labels = document.querySelectorAll('label[for="source"],label[for="target"],label[for="itype"],label[for="autolayout"],label[for="pmid"],label[for="note"]');
   labels.forEach(l => l.style.display = "none");
 
-  setStatus("View-only mode (editing disabled).");
+  setStatusText("View-only mode (editing disabled).");
 }
 
   function normGene(s) {
@@ -245,25 +249,25 @@ function save() {
 
 document.getElementById("deleteSelected")?.addEventListener("click", () => {
   if (IS_VIEW_ONLY) {
-    setStatus("View-only mode: editing is disabled.");
+    setStatusText("View-only mode: editing is disabled.");
     return;
   }
 
   const selectedNodes = cy.nodes(":selected");
   if (selectedNodes.empty()) {
-    setStatus("No node selected. Click a node, then try again.");
+    setStatusText("No node selected. Click a node, then try again.");
     return;
   }
 
   const labels = selectedNodes.map(n => n.data("label")).join(", ");
   if (!confirm(`Delete selected node(s): ${labels} ? This will also remove connected edges.`)) {
-    setStatus("Delete cancelled.");
+    setStatusText("Delete cancelled.");
     return;
   }
 
   selectedNodes.remove();
   save();
-  setStatus(`Deleted: ${labels}`);
+  setStatusText(`Deleted: ${labels}`);
 });
 
 let saveTimer = null;
@@ -334,7 +338,7 @@ function runLayout() {
 
     const html = `
       <div style="font-size:12px; line-height:1.35;">
-        <div><b>${src}</b> ${type} <b>${tgt}</b></div>
+        <div><b>${escapeHtml(src)}</b> ${escapeHtml(type)} <b>${escapeHtml(tgt)}</b></div>
         <div style="margin-top:6px;"><b>PMID:</b> ${pmids.length ? pmids.map(p => pmidLink(p)).join(", ") : "(none)"}</div>
         ${note ? `<div style="margin-top:6px;"><b>Note:</b> ${escapeHtml(note)}</div>` : ""}
       </div>
@@ -343,6 +347,11 @@ function runLayout() {
     // Create a virtual element for tippy using Popper reference
     const ref = edge.popperRef();
     const dummyDomEle = document.createElement("div");
+    document.body.appendChild(dummyDomEle);
+
+    const tip = tippy(dummyDomEle, { ... })[0];
+    tip._dummy = dummyDomEle;
+    return tip;
 
     const tip = tippy(dummyDomEle, {
       getReferenceClientRect: ref.getBoundingClientRect,
@@ -386,7 +395,9 @@ function destroyTipSoon() {
   clearHideTimer();
   hideTimer = setTimeout(() => {
     if (activeTip) {
+      const d = activeTip._dummy;
       activeTip.destroy();
+      if (d && d.parentNode) d.parentNode.removeChild(d);
       activeTip = null;
     }
   }, 250);
@@ -415,16 +426,22 @@ function showEdgeTip(edge) {
 cy.on("tap", "edge", (evt) => {
   const e = evt.target;
 
-  // Update status line
   const src = e.source().data("label");
   const tgt = e.target().data("label");
   const type = e.data("type");
   const pmids = e.data("pmids") || [];
-  setStatus(`${src} ${type} ${tgt}${pmids.length ? `: PMID ${pmids.join(", ")}` : ""}`);
 
-  // Show tooltip (with clickable PMID links)
+  const pmidHtml = pmids.length
+    ? pmids.map(p => pmidLink(p)).join(", ")
+    : "(none)";
+
+  setStatusHtml(
+    `<b>${escapeHtml(src)}</b> ${escapeHtml(type)} <b>${escapeHtml(tgt)}</b>: PMID ${pmidHtml}`
+  );
+
   showEdgeTip(e);
 });
+
 
 // Click on empty space closes it
 cy.on("tap", (evt) => {
@@ -444,7 +461,7 @@ cy.on("tap", (evt) => {
   // --- Add/update edge logic ---
   document.getElementById("addEdge").addEventListener("click", () => {
     if (IS_VIEW_ONLY) {
-     setStatus("View-only mode: editing is disabled.");
+     setStatusText("View-only mode: editing is disabled.");
      return;
      }
     const src = normGene(document.getElementById("source").value);
@@ -454,11 +471,11 @@ cy.on("tap", (evt) => {
     const note = (document.getElementById("note").value || "").trim();
 
     if (!src || !tgt) {
-      setStatus("Please enter both source and target genes.");
+      setStatusText("Please enter both source and target genes.");
       return;
     }
     if (pmid && !isValidPmid(pmid)) {
-      setStatus("PMID should be digits only (e.g., 12345678).");
+      setStatusText("PMID should be digits only (e.g., 12345678).");
       return;
     }
 
@@ -480,14 +497,14 @@ cy.on("tap", (evt) => {
           note
         }
       });
-      setStatus(`Added: ${src} ${type} ${tgt}${pmid ? ` (PMID ${pmid})` : ""}`);
+      setStatusText(`Added: ${src} ${type} ${tgt}${pmid ? ` (PMID ${pmid})` : ""}`);
     } else {
       // Update: add PMID to list if new; update note if provided
       const pmids = edge.data("pmids") || [];
       if (pmid && !pmids.includes(pmid)) pmids.push(pmid);
       edge.data("pmids", pmids);
       if (note) edge.data("note", note);
-      setStatus(`Updated edge. PMID list: ${pmids.join(", ") || "(none)"}`);
+      setStatusText(`Updated edge. PMID list: ${pmids.join(", ") || "(none)"}`);
     }
 
     runLayout();
@@ -497,12 +514,12 @@ cy.on("tap", (evt) => {
   // --- Clear network ---
   document.getElementById("clear").addEventListener("click", () => {
    if (IS_VIEW_ONLY) {
-    setStatus("View-only mode: editing is disabled.");
+    setStatusText("View-only mode: editing is disabled.");
     return;
     }
     cy.elements().remove();
     save();
-    setStatus("Cleared network.");
+    setStatusText("Cleared network.");
   });
 
   // --- Export / Import ---
@@ -511,7 +528,7 @@ cy.on("tap", (evt) => {
 
   document.getElementById("exportJson").addEventListener("click", () => {
   if (IS_VIEW_ONLY) {
-   setStatus("View-only mode: editing is disabled.");
+   setStatusText("View-only mode: editing is disabled.");
    return;
   }
   const elements = cy.json().elements;
@@ -527,24 +544,24 @@ cy.on("tap", (evt) => {
   jsonBox.value = JSON.stringify(payload, null, 2);
   jsonBox.focus();
   jsonBox.select();
-  setStatus("Exported JSON below. Copy it to share/save.");
+  setStatusText("Exported JSON below. Copy it to share/save.");
 });
 
   document.getElementById("importJson").addEventListener("click", () => {
     if (IS_VIEW_ONLY) {
-     setStatus("View-only mode: editing is disabled.");
+     setStatusText("View-only mode: editing is disabled.");
      return;
     }
     jsonBox.style.display = "block";
     doImportBtn.style.display = "block";
     jsonBox.value = "";
-    setStatus("Paste JSON below, then click 'Load pasted JSON'.");
+    setStatusText("Paste JSON below, then click 'Load pasted JSON'.");
     jsonBox.focus();
   });
 
   doImportBtn.addEventListener("click", () => {
     if (IS_VIEW_ONLY) {
-     setStatus("View-only mode: editing is disabled.");
+     setStatusText("View-only mode: editing is disabled.");
      return;
     }
   try {
@@ -572,13 +589,13 @@ cy.on("tap", (evt) => {
     }
 
     save();
-    setStatus("Imported network from JSON.");
+    setStatusText("Imported network from JSON.");
   } catch (e) {
-    setStatus("Import failed: " + e.message);
+    setStatusText("Import failed: " + e.message);
   }
 });
 
-  setStatus(initialElements.length ? "Loaded saved network from this browser." : "Ready.");
+  setStatusText(initialElements.length ? "Loaded saved network from this browser." : "Ready.");
 </script>
 </body>
 </html>
