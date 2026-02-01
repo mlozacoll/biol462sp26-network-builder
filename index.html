@@ -191,6 +191,21 @@
     layout: { name: "grid" }
   });
 
+function save() {
+  const elements = cy.json().elements;
+  const nodes = cy.nodes().map(n => ({
+    id: n.id(),
+    position: { ...n.position() }
+  }));
+  const payload = { elements, positions: nodes };
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
+}
+
+// Save whenever any node moves
+cy.on("position", "node", () => {
+  save();
+});
+
   // Restore saved positions (if any)
 if (saved?.positions?.length) {
   for (const p of saved.positions) {
@@ -207,10 +222,6 @@ if (saved?.positions?.length) {
   const sel = document.getElementById("autolayout");
   if (sel) sel.value = "off";
 }
-
-  cy.on("dragfree", "node", () => {
-  save();
-});
 
   function autoLayoutEnabled() {
   const sel = document.getElementById("autolayout");
@@ -294,22 +305,7 @@ function runLayout() {
     }
   });
 
-  // --- Persistence ---
-  function save() {
-  // Capture node positions so manual arrangement persists
-  const elements = cy.json().elements;
-
-  // Ensure positions are stored explicitly
-  const nodes = cy.nodes().map(n => ({
-    id: n.id(),
-    position: { ...n.position() }
-  }));
-
-  const payload = { elements, positions: nodes };
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
-}
-
-
+  
   // --- Ensure node exists ---
   function ensureNode(gene) {
     const id = `n:${gene}`;
