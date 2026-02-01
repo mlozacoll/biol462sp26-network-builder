@@ -78,7 +78,11 @@
         <button id="addEdge">Add / Update edge</button>
         <button id="clear">Clear network</button>
       </div>
-
+      
+      <div class="btnrow">
+        <button id="deleteSelected">Delete selected</button>
+      </div>
+      
       <div class="btnrow">
         <button id="exportJson">Export JSON</button>
         <button id="importJson">Import JSON</button>
@@ -106,6 +110,33 @@
 <script>
   // --- Utilities ---
   const STORAGE_KEY = "genetic_network_v1";
+  const MODE = new URLSearchParams(window.location.search).get("mode") || "edit";
+  const IS_VIEW_ONLY = (MODE.toLowerCase() === "view");
+
+  function setStatus(msg) {
+    document.getElementById("status").textContent = msg;
+  }
+  
+  function applyModeUI() {
+  if (!IS_VIEW_ONLY) return;
+
+  // Hide inputs + buttons that edit the network
+  const idsToHide = [
+    "source","target","itype","autolayout","pmid","note",
+    "addEdge","clear","deleteSelected","exportJson","importJson","doImport","jsonBox"
+  ];
+
+  for (const id of idsToHide) {
+    const el = document.getElementById(id);
+    if (el) el.style.display = "none";
+  }
+
+  // Also hide their labels (best-effort)
+  const labels = document.querySelectorAll('label[for="source"],label[for="target"],label[for="itype"],label[for="autolayout"],label[for="pmid"],label[for="note"]');
+  labels.forEach(l => l.style.display = "none");
+
+  setStatus("View-only mode (editing disabled).");
+}
 
   function normGene(s) {
     return (s || "").trim();
@@ -114,10 +145,6 @@
   function isValidPmid(s) {
     // PubMed IDs are digits; length varies. We'll accept 1..10 digits to be permissive.
     return /^[0-9]{1,10}$/.test((s || "").trim());
-  }
-
-  function setStatus(msg) {
-    document.getElementById("status").textContent = msg;
   }
 
   function edgeId(src, tgt, type) {
@@ -191,6 +218,14 @@
     layout: { name: "grid" }
   });
 
+  if (IS_VIEW_ONLY) {
+    cy.nodes().ungrabify();
+    cy.panningEnabled(true);
+    cy.zoomingEnabled(true);
+  }
+
+applyModeUI();
+  
 function save() {
   const elements = cy.json().elements;
 
@@ -207,6 +242,29 @@ function save() {
   const payload = { elements, positions, viewport };
   localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
 }
+
+document.getElementById("deleteSelected")?.addEventListener("click", () => {
+  if (IS_VIEW_ONLY) {
+    setStatus("View-only mode: editing is disabled.");
+    return;
+  }
+
+  const selectedNodes = cy.nodes(":selected");
+  if (selectedNodes.empty()) {
+    setStatus("No node selected. Click a node, then try again.");
+    return;
+  }
+
+  const labels = selectedNodes.map(n => n.data("label")).join(", ");
+  if (!confirm(`Delete selected node(s): ${labels} ? This will also remove connected edges.`)) {
+    setStatus("Delete cancelled.");
+    return;
+  }
+
+  selectedNodes.remove();
+  save();
+  setStatus(`Deleted: ${labels}`);
+});
 
 let saveTimer = null;
 function saveSoon() {
@@ -250,6 +308,7 @@ if (saved?.positions?.length) {
 function runLayout() {
   if (!autoLayoutEnabled()) return;
 
+  const hasDagre = (typeof cytoscapeDagre !== "undefined");
   const layoutName = (cytoscapeDagre ? "dagre" : "cose");
   const layout = cy.layout({
     name: layoutName,
@@ -276,11 +335,11 @@ function runLayout() {
     const html = `
       <div style="font-size:12px; line-height:1.35;">
         <div><b>${src}</b> ${type} <b>${tgt}</b></div>
-        <div style="margin-top:6px;"><b>PMID:</b> ${pmids.length ? pmids.join(", ") : "(none)"}</div>
+        <div style="margin-top:6px;"><b>PMID:</b> ${pmids.length ? pmids.map(p => pmidLink(p)).join(", ") : "(none)"}</div>
         ${note ? `<div style="margin-top:6px;"><b>Note:</b> ${escapeHtml(note)}</div>` : ""}
       </div>
     `;
-
+    
     // Create a virtual element for tippy using Popper reference
     const ref = edge.popperRef();
     const dummyDomEle = document.createElement("div");
@@ -297,6 +356,13 @@ function runLayout() {
 
     return tip;
   }
+  
+  function pmidLink(pmid) {
+      const clean = String(pmid).trim();
+      const url = `https://pubmed.ncbi.nlm.nih.gov/${encodeURIComponent(clean)}/`;
+      // Escape the visible text, but keep the anchor HTML
+      return `<a href="${url}" target="_blank" rel="noopener noreferrer">${escapeHtml(clean)}</a>`;
+    }
 
   // Simple HTML escaping for notes
   function escapeHtml(str) {
@@ -337,6 +403,10 @@ function runLayout() {
 
   // --- Add/update edge logic ---
   document.getElementById("addEdge").addEventListener("click", () => {
+    if (IS_VIEW_ONLY) {
+     setStatus("View-only mode: editing is disabled.");
+     return;
+     }
     const src = normGene(document.getElementById("source").value);
     const tgt = normGene(document.getElementById("target").value);
     const type = document.getElementById("itype").value;
@@ -386,6 +456,10 @@ function runLayout() {
 
   // --- Clear network ---
   document.getElementById("clear").addEventListener("click", () => {
+   if (IS_VIEW_ONLY) {
+    setStatus("View-only mode: editing is disabled.");
+    return;
+    }
     cy.elements().remove();
     save();
     setStatus("Cleared network.");
@@ -396,6 +470,10 @@ function runLayout() {
   const doImportBtn = document.getElementById("doImport");
 
   document.getElementById("exportJson").addEventListener("click", () => {
+  if (IS_VIEW_ONLY) {
+   setStatus("View-only mode: editing is disabled.");
+   return;
+  }
   const elements = cy.json().elements;
   const positions = cy.nodes().map(n => ({
     id: n.id(),
@@ -413,6 +491,10 @@ function runLayout() {
 });
 
   document.getElementById("importJson").addEventListener("click", () => {
+    if (IS_VIEW_ONLY) {
+     setStatus("View-only mode: editing is disabled.");
+     return;
+    }
     jsonBox.style.display = "block";
     doImportBtn.style.display = "block";
     jsonBox.value = "";
@@ -421,6 +503,10 @@ function runLayout() {
   });
 
   doImportBtn.addEventListener("click", () => {
+    if (IS_VIEW_ONLY) {
+     setStatus("View-only mode: editing is disabled.");
+     return;
+    }
   try {
     const payload = JSON.parse(jsonBox.value);
     if (!payload?.elements) throw new Error("Missing 'elements' field.");
@@ -436,6 +522,13 @@ function runLayout() {
       }
     } else {
       runLayout();
+    }
+    
+    if (payload?.viewport) {
+      if (typeof payload.viewport.zoom === "number") cy.zoom(payload.viewport.zoom);
+      if (payload.viewport.pan) cy.pan(payload.viewport.pan);
+    } else {
+      cy.fit(undefined, 40);
     }
 
     save();
