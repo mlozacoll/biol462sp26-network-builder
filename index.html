@@ -8,6 +8,9 @@
   <!-- Cytoscape -->
   <script src="https://unpkg.com/cytoscape@3.28.1/dist/cytoscape.min.js"></script>
 
+  <!-- Cytoscape SVG export plugin -->
+  <script src="https://cdn.jsdelivr.net/npm/cytoscape-svg@0.4.0/cytoscape-svg.js"></script>
+
   <!-- Optional layout (nice directed layout). If blocked, it falls back gracefully. -->
   <script src="https://unpkg.com/dagre@0.8.5/dist/dagre.min.js"></script>
   <script src="https://unpkg.com/cytoscape-dagre@2.5.0/cytoscape-dagre.js"></script>
@@ -72,6 +75,11 @@
       <div class="btnrow">
         <button id="addEdge">Add / Update edge</button>
         <button id="clear">Clear network</button>
+      </div>
+
+      <div class="btnrow">
+        <button id="exportPng">Export PNG</button>
+        <button id="exportSvg">Export SVG</button>
       </div>
       
       <div class="btnrow">
@@ -153,7 +161,7 @@
   // VIEW-ONLY: hide editing controls
   const idsToHide = [
     "source","target","itype","autolayout","pmid","note",
-    "addEdge","clear","deleteSelected","exportJson","importJson","doImport","jsonBox"
+    "addEdge","clear","exportSvg","deleteSelected","exportJson","doImport","jsonBox"
   ];
 
   for (const id of idsToHide) {
@@ -272,7 +280,7 @@
   }
 
 applyModeUI();
-  
+
 function save() {
   const elements = cy.json().elements;
 
@@ -311,6 +319,44 @@ document.getElementById("deleteSelected")?.addEventListener("click", () => {
   selectedNodes.remove();
   save();
   setStatusText(`Deleted: ${labels}`);
+});
+
+function downloadBlob(filename, blob) {
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+}
+
+document.getElementById("exportPng").addEventListener("click", () => {
+  // higher scale = sharper for slides
+  const pngDataUrl = cy.png({ full: true, scale: 2, bg: "white" });
+
+  const a = document.createElement("a");
+  a.href = pngDataUrl;
+  a.download = "genetic-network.png";
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+
+  setStatusText("Exported PNG.");
+});
+  
+document.getElementById("exportSvg").addEventListener("click", () => {
+  if (typeof cy.svg !== "function") {
+    setStatusText("SVG export not available (plugin blocked).");
+    return;
+  }
+
+  const svgText = cy.svg({ full: true, scale: 1, bg: "white" });
+  const blob = new Blob([svgText], { type: "image/svg+xml;charset=utf-8" });
+  downloadBlob("genetic-network.svg", blob);
+
+  setStatusText("Exported SVG.");
 });
 
 let saveTimer = null;
