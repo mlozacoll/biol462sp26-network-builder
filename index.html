@@ -413,14 +413,30 @@ cy.on("click", "edge", (evt) => {
 });
 
   // --- Ensure node exists ---
-  function ensureNode(gene) {
-    const id = `n:${gene}`;
-    let n = cy.getElementById(id);
-    if (n.empty()) {
-      cy.add({ group: "nodes", data: { id, label: gene } });
+  function ensureNode(gene, anchorNode = null, dx = 140, dy = 0) {
+  const id = `n:${gene}`;
+  let n = cy.getElementById(id);
+
+  if (n.empty()) {
+    // Default position: center of current viewport
+    let pos = {
+      x: cy.pan().x + cy.width() / 2,
+      y: cy.pan().y + cy.height() / 2
+    };
+
+    // If we have an anchor node already on the canvas, offset from it
+    if (anchorNode && !anchorNode.empty()) {
+      const a = anchorNode.position();
+      const jitter = () => (Math.random() - 0.5) * 20; // +/-10px
+      pos = { x: a.x + dx + jitter(), y: a.y + dy + jitter() };
     }
-    return id;
+
+    cy.add({ group: "nodes", data: { id, label: gene }, position: pos });
+    n = cy.getElementById(id);
   }
+
+  return id;
+}
 
   // --- Add/update edge logic ---
   document.getElementById("addEdge").addEventListener("click", () => {
@@ -443,8 +459,12 @@ cy.on("click", "edge", (evt) => {
       return;
     }
 
-    const srcId = ensureNode(src);
-    const tgtId = ensureNode(tgt);
+    let srcNode = cy.getElementById(`n:${src}`);
+    let tgtNode = cy.getElementById(`n:${tgt}`);
+
+    const srcId = ensureNode(src, tgtNode, -160, 0); // if src is new, put it left of target
+    const tgtId = ensureNode(tgt, cy.getElementById(srcId), 160, 0); // if tgt is new, put it right of src
+
 
     const eid = edgeId(src, tgt, type);
     let edge = cy.getElementById(eid);
