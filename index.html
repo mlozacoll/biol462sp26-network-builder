@@ -114,15 +114,31 @@
 <script>
   // --- Utilities ---
   const STORAGE_KEY = "genetic_network_v1";
-  const MODE = new URLSearchParams(window.location.search).get("mode") || "edit";
-  const IS_VIEW_ONLY = (MODE.toLowerCase() === "view");
-
+  
+  // URL & embedding info
+  const params = new URLSearchParams(window.location.search);
+  
+  // True if the app is running inside an iframe (e.g. Canvas embed)
+  const IN_IFRAME = (window.self !== window.top);
+  
+  // Mode from URL, default to *view* (safer default than edit)
+  const MODE = (params.get("mode") || "view").toLowerCase();
+  
+  // Simple “edit key” so only your special URL can truly be in edit mode
+  // Feel free to change this string to anything you like.
+  const EDIT_KEY_REQUIRED = "EDIT_462_SP26";
+  const EDIT_KEY = params.get("editkey") || "";
+  
+  // Final gate: we’re view-only if: embedded in iframe (Canvas), mode is not "edit", OR
+  //  the editkey doesn’t match
+  const IS_VIEW_ONLY = IN_IFRAME || MODE !== "edit" || EDIT_KEY !== EDIT_KEY_REQUIRED;
+  
   function setStatusText(msg) {
-  document.getElementById("status").textContent = msg;
+    document.getElementById("status").textContent = msg;
   }
-
+  
   function setStatusHtml(html) {
-  document.getElementById("status").innerHTML = html;
+    document.getElementById("status").innerHTML = html;
   }
   
   function applyModeUI() {
@@ -272,16 +288,28 @@
   
   // Prevent edges from ever being “grabbed”
   cy.edges().ungrabify();
-  
+
   if (IS_VIEW_ONLY) {
-    cy.nodes().ungrabify();
-    cy.panningEnabled(true);
-    cy.zoomingEnabled(true);
-  }
+  cy.autoungrabify(true);
+  cy.autounselectify(true);
+  cy.boxSelectionEnabled(false);
+  cy.userPanningEnabled(true);
+  cy.userZoomingEnabled(true);
+}
+
+  if (IS_VIEW_ONLY) {
+  cy.autoungrabify(true);
+  cy.autounselectify(true);
+  cy.boxSelectionEnabled(false);
+  cy.userPanningEnabled(true);
+  cy.userZoomingEnabled(true);
+}
 
 applyModeUI();
 
 function save() {
+  if (IS_VIEW_ONLY) return;
+
   const elements = cy.json().elements;
 
   const positions = cy.nodes().map(n => ({
