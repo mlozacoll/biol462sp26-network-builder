@@ -599,10 +599,6 @@ function ensureNode(gene) {
   const doImportBtn = document.getElementById("doImport");
 
   document.getElementById("exportJson").addEventListener("click", () => {
-  if (IS_VIEW_ONLY) {
-   setStatusText("View-only mode: editing is disabled.");
-   return;
-  }
   const elements = cy.json().elements;
   const positions = cy.nodes().map(n => ({
     id: n.id(),
