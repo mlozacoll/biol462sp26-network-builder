@@ -177,7 +177,7 @@
   // VIEW-ONLY: hide editing controls
   const idsToHide = [
     "source","target","itype","autolayout","pmid","note",
-    "addEdge","clear","exportSvg","deleteSelected","exportJson","doImport","jsonBox"
+    "addEdge","clear","exportSvg","deleteSelected","importJson","doImport","jsonBox"
   ];
 
   for (const id of idsToHide) {
@@ -463,10 +463,40 @@ function escapeHtml(str) {
     .replaceAll("'", "&#039;");
 }
 
+// --- Optional: cache for PMID → title ---
+const PM_TITLE_CACHE = {};
+
+// Try to fetch a title for a PubMed ID. Returns null on failure so UI can silently ignore problems.
+async function fetchPmidTitle(pmid) {
+  const clean = String(pmid).trim();
+  if (!clean) return null;
+
+  if (PM_TITLE_CACHE[clean]) {
+    return PM_TITLE_CACHE[clean];
+  }
+
+  try {
+    const resp = await fetch(
+      `https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi` +
+      `?db=pubmed&id=${encodeURIComponent(clean)}&retmode=json`
+    );
+    if (!resp.ok) return null;
+
+    const data = await resp.json();
+    const title = data?.result?.[clean]?.title;
+    if (!title) return null;
+
+    PM_TITLE_CACHE[clean] = title;
+    return title;
+  } catch (e) {
+    console.error("Error fetching PubMed title for", clean, e);
+    return null;
+  }
+}
+
 // Nice-to-have: click on edge shows PMID in status window
 cy.on("click", "edge", (evt) => {
-  const e = evt.target;
-
+  const e    = evt.target;
   const src  = e.source().data("label");
   const tgt  = e.target().data("label");
   const type = e.data("type");
@@ -477,14 +507,32 @@ cy.on("click", "edge", (evt) => {
     ? pmids.map(p => pmidLink(p)).join(", ")
     : "(none)";
 
+  // Initial render: always show clickable PMIDs right away
   setStatusHtml(`
     <div style="line-height:1.35;">
       <div><b>${escapeHtml(src)}</b> ${escapeHtml(type)} <b>${escapeHtml(tgt)}</b></div>
       <div style="margin-top:6px;"><b>PMID:</b> ${pmidHtml}</div>
+      <div id="pmid-title-line" style="margin-top:6px; display:none;"></div>
       ${note ? `<div style="margin-top:6px;"><b>Note:</b> ${escapeHtml(note)}</div>` : ""}
     </div>
   `);
+
+  // Optional: fetch the first PMID's title in the background
+  if (pmids.length) {
+    const first = pmids[0];
+    fetchPmidTitle(first).then(title => {
+      if (!title) return;
+      const titleDiv = document.getElementById("pmid-title-line");
+      if (!titleDiv) return;
+      titleDiv.style.display = "block";
+      titleDiv.innerHTML = `<b>Title:</b> ${escapeHtml(title)}`;
+    });
+  }
+
+  // Just in case anything feels "grabbed"
+  cy.trigger("free");
 });
+
 
 // --- Ensure node exists ---
 function ensureNode(gene) {
