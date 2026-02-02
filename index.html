@@ -412,88 +412,102 @@ cy.on("click", "edge", (evt) => {
   `);
 });
 
-  // --- Ensure node exists ---
-  function ensureNode(gene, anchorNode = null, dx = 140, dy = 0) {
+// --- Ensure node exists ---
+function ensureNode(gene) {
   const id = `n:${gene}`;
   let n = cy.getElementById(id);
-
   if (n.empty()) {
-    // Default position: center of current viewport
-    let pos = {
-      x: cy.pan().x + cy.width() / 2,
-      y: cy.pan().y + cy.height() / 2
-    };
-
-    // If we have an anchor node already on the canvas, offset from it
-    if (anchorNode && !anchorNode.empty()) {
-      const a = anchorNode.position();
-      const jitter = () => (Math.random() - 0.5) * 20; // +/-10px
-      pos = { x: a.x + dx + jitter(), y: a.y + dy + jitter() };
-    }
-
-    cy.add({ group: "nodes", data: { id, label: gene }, position: pos });
-    n = cy.getElementById(id);
+    cy.add({ group: "nodes", data: { id, label: gene } });
   }
-
   return id;
 }
 
   // --- Add/update edge logic ---
   document.getElementById("addEdge").addEventListener("click", () => {
-    if (IS_VIEW_ONLY) {
-     setStatusText("View-only mode: editing is disabled.");
-     return;
-     }
-    const src = normGene(document.getElementById("source").value);
-    const tgt = normGene(document.getElementById("target").value);
-    const type = document.getElementById("itype").value;
-    const pmid = (document.getElementById("pmid").value || "").trim();
-    const note = (document.getElementById("note").value || "").trim();
+  if (IS_VIEW_ONLY) {
+    setStatusText("View-only mode: editing is disabled.");
+    return;
+  }
 
-    if (!src || !tgt) {
-      setStatusText("Please enter both source and target genes.");
-      return;
+  const src  = normGene(document.getElementById("source").value);
+  const tgt  = normGene(document.getElementById("target").value);
+  const type = document.getElementById("itype").value;
+  const pmid = (document.getElementById("pmid").value || "").trim();
+  const note = (document.getElementById("note").value || "").trim();
+
+  if (!src || !tgt) {
+    setStatusText("Please enter both source and target genes.");
+    return;
+  }
+  if (pmid && !isValidPmid(pmid)) {
+    setStatusText("PMID should be digits only (e.g., 12345678).");
+    return;
+  }
+
+  // --- remember which nodes already exist (so we only reposition NEW ones) ---
+  const srcNodeId = `n:${src}`;
+  const tgtNodeId = `n:${tgt}`;
+  const srcWasNew = cy.getElementById(srcNodeId).empty();
+  const tgtWasNew = cy.getElementById(tgtNodeId).empty();
+
+  // --- ensure nodes exist (use your SIMPLE ensureNode(gene) version) ---
+  const srcId = ensureNode(src);
+  const tgtId = ensureNode(tgt);
+
+  // --- if auto-layout is OFF, place new nodes near the existing one (or as a pair) ---
+  if (!autoLayoutEnabled() && (srcWasNew || tgtWasNew)) {
+    const srcNode = cy.getElementById(srcId);
+    const tgtNode = cy.getElementById(tgtId);
+
+    const center = {
+      x: cy.pan().x + cy.width() / 2,
+      y: cy.pan().y + cy.height() / 2
+    };
+
+    const jitter = () => (Math.random() - 0.5) * 20; // +/-10px
+    const dx = 160;
+
+    if (srcWasNew && !tgtWasNew) {
+      const a = tgtNode.position();
+      srcNode.position({ x: a.x - dx + jitter(), y: a.y + jitter() });
+    } else if (!srcWasNew && tgtWasNew) {
+      const a = srcNode.position();
+      tgtNode.position({ x: a.x + dx + jitter(), y: a.y + jitter() });
+    } else if (srcWasNew && tgtWasNew) {
+      srcNode.position({ x: center.x - dx / 2 + jitter(), y: center.y + jitter() });
+      tgtNode.position({ x: center.x + dx / 2 + jitter(), y: center.y + jitter() });
     }
-    if (pmid && !isValidPmid(pmid)) {
-      setStatusText("PMID should be digits only (e.g., 12345678).");
-      return;
-    }
+  }
 
-    let srcNode = cy.getElementById(`n:${src}`);
-    let tgtNode = cy.getElementById(`n:${tgt}`);
+  // --- add/update edge ---
+  const eid = edgeId(src, tgt, type);
+  let edge = cy.getElementById(eid);
 
-    const srcId = ensureNode(src, tgtNode, -160, 0); // if src is new, put it left of target
-    const tgtId = ensureNode(tgt, cy.getElementById(srcId), 160, 0); // if tgt is new, put it right of src
+  if (edge.empty()) {
+    cy.add({
+      group: "edges",
+      data: {
+        id: eid,
+        source: srcId,
+        target: tgtId,
+        type,
+        pmids: pmid ? [pmid] : [],
+        note
+      }
+    });
+    setStatusText(`Added: ${src} ${type} ${tgt}${pmid ? ` (PMID ${pmid})` : ""}`);
+  } else {
+    const pmids = edge.data("pmids") || [];
+    if (pmid && !pmids.includes(pmid)) pmids.push(pmid);
+    edge.data("pmids", pmids);
+    if (note) edge.data("note", note);
+    setStatusText(`Updated edge. PMID list: ${pmids.join(", ") || "(none)"}`);
+  }
 
+  runLayout();
+  save();
+});
 
-    const eid = edgeId(src, tgt, type);
-    let edge = cy.getElementById(eid);
-
-    if (edge.empty()) {
-      cy.add({
-        group: "edges",
-        data: {
-          id: eid,
-          source: srcId,
-          target: tgtId,
-          type,
-          pmids: pmid ? [pmid] : [],
-          note
-        }
-      });
-      setStatusText(`Added: ${src} ${type} ${tgt}${pmid ? ` (PMID ${pmid})` : ""}`);
-    } else {
-      // Update: add PMID to list if new; update note if provided
-      const pmids = edge.data("pmids") || [];
-      if (pmid && !pmids.includes(pmid)) pmids.push(pmid);
-      edge.data("pmids", pmids);
-      if (note) edge.data("note", note);
-      setStatusText(`Updated edge. PMID list: ${pmids.join(", ") || "(none)"}`);
-    }
-
-    runLayout();
-    save();
-  });
 
   // --- Clear network ---
   document.getElementById("clear").addEventListener("click", () => {
