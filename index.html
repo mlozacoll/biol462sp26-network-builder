@@ -497,6 +497,11 @@ async function fetchPmidTitle(pmid) {
 // Nice-to-have: click on edge shows PMID in status window
 cy.on("click", "edge", (evt) => {
   const e    = evt.target;
+  
+  // Force selection to follow the clicked edge
+  cy.$(":selected").unselect();
+  e.select();
+  
   const src  = e.source().data("label");
   const tgt  = e.target().data("label");
   const type = e.data("type");
@@ -516,6 +521,11 @@ cy.on("click", "edge", (evt) => {
       ${note ? `<div style="margin-top:6px;"><b>Note:</b> ${escapeHtml(note)}</div>` : ""}
     </div>
   `);
+
+  // Unselects edge when user clicks on canvas
+  cy.on("click", (evt) => {
+  if (evt.target === cy) cy.$(":selected").unselect();
+  });
 
   // Optional: fetch the first PMID's title in the background
   if (pmids.length) {
