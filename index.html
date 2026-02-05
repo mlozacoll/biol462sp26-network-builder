@@ -83,7 +83,8 @@
       </div>
       
       <div class="btnrow">
-        <button id="deleteSelected">Delete selected</button>
+        <button id="deleteNode">Delete node</button>
+        <button id="deleteEdge">Delete edge</button>
       </div>
       
       <div class="btnrow">
@@ -147,7 +148,7 @@
     // Make sure editor controls are visible (in case you toggled modes in-session)
     const idsToShow = [
       "source","target","itype","autolayout","pmid","note",
-      "addEdge","clear","deleteSelected","exportJson","importJson","doImport","jsonBox"
+      "addEdge","clear","deleteNode","deleteEdge","exportJson","importJson","doImport","jsonBox"
     ];
     for (const id of idsToShow) {
       const el = document.getElementById(id);
@@ -177,7 +178,7 @@
   // VIEW-ONLY: hide editing controls
   const idsToHide = [
     "source","target","itype","autolayout","pmid","note",
-    "addEdge","clear","exportSvg","deleteSelected","importJson","doImport","jsonBox"
+    "addEdge","clear","exportSvg","deleteNode","delete.Edge","importJson","doImport","jsonBox"
   ];
 
   for (const id of idsToHide) {
@@ -321,7 +322,7 @@ function save() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
 }
 
-document.getElementById("deleteSelected")?.addEventListener("click", () => {
+document.getElementById("deleteNode")?.addEventListener("click", () => {
   if (IS_VIEW_ONLY) {
     setStatusText("View-only mode: editing is disabled.");
     return;
@@ -344,6 +345,35 @@ document.getElementById("deleteSelected")?.addEventListener("click", () => {
   setStatusText(`Deleted: ${labels}`);
 });
 
+document.getElementById("deleteEdge")?.addEventListener("click", () => {
+  if (IS_VIEW_ONLY) {
+    setStatusText("View-only mode: editing is disabled.");
+    return;
+  }
+
+  const selectedEdges = cy.edges(":selected");
+  if (selectedEdges.empty()) {
+    setStatusText("No edge selected. Click an edge, then try again.");
+    return;
+  }
+
+  const summaries = selectedEdges.map(e => {
+    const src = e.source().data("label");
+    const tgt = e.target().data("label");
+    const type = e.data("type");
+    return `${src} ${type} ${tgt}`;
+  }).join("; ");
+
+  if (!confirm(`Delete selected edge(s): ${summaries} ?`)) {
+    setStatusText("Delete cancelled.");
+    return;
+  }
+
+  selectedEdges.remove();
+  save();
+  setStatusText("Deleted selected edge(s).");
+});
+  
 function downloadBlob(filename, blob) {
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
