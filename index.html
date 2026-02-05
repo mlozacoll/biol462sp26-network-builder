@@ -242,11 +242,13 @@
           "shape": "round-rectangle",
           "background-opacity": 0,
           "border-width": 2,
-          "border-color": "#333",
+          "border-color": "#666",
           "label": "data(label)",
           "text-valign": "center",
           "text-halign": "center",
-          "padding": "10px",
+          "width": "label",     // auto-resizing of nodes
+          "height": "label",
+          "padding": "10px",    // spacing around text
           "font-size": 14
         }
       },
@@ -255,23 +257,24 @@
         style: {
           "curve-style": "bezier",
           "width": 2,
-          "line-color": "#333",
-          "target-arrow-color": "#333",
-          "target-arrow-shape": "triangle",
           "arrow-scale": 1.1,
-          "label": "",
+          "label": ""
         }
       },
       {
         selector: 'edge[type = "inhibits"]',
         style: {
-          "target-arrow-shape": "tee"
+          "target-arrow-shape": "tee",
+          "line-color": "#c62828",
+          "target-arrow-color": "#c62828"
         }
       },
       {
         selector: 'edge[type = "activates"]',
         style: {
-          "target-arrow-shape": "triangle"
+          "target-arrow-shape": "triangle",
+          "line-color": "#2e7d32",
+          "target-arrow-color": "#2e7d32"
         }
       },
       {
