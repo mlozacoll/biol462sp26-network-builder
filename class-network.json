@@ -1,0 +1,1142 @@
+{
+  "elements": {
+    "nodes": [
+      {
+        "data": {
+          "id": "n:Aβ-olig",
+          "label": "Aβ-olig"
+        },
+        "position": {
+          "x": 26,
+          "y": 26
+        },
+        "group": "nodes",
+        "removed": false,
+        "selected": false,
+        "selectable": true,
+        "locked": false,
+        "grabbable": true,
+        "pannable": false,
+        "classes": ""
+      },
+      {
+        "data": {
+          "id": "n:NMDA",
+          "label": "NMDA"
+        },
+        "position": {
+          "x": 138,
+          "y": 26
+        },
+        "group": "nodes",
+        "removed": false,
+        "selected": false,
+        "selectable": true,
+        "locked": false,
+        "grabbable": true,
+        "pannable": false,
+        "classes": ""
+      },
+      {
+        "data": {
+          "id": "n:↑↑Ca++",
+          "label": "↑↑Ca++"
+        },
+        "position": {
+          "x": 209.83350245774162,
+          "y": -57.22035538830673
+        },
+        "group": "nodes",
+        "removed": false,
+        "selected": false,
+        "selectable": true,
+        "locked": false,
+        "grabbable": true,
+        "pannable": false,
+        "classes": ""
+      },
+      {
+        "data": {
+          "id": "n:CDK5",
+          "label": "CDK5"
+        },
+        "position": {
+          "x": 332.70235311391104,
+          "y": -68.52718011345402
+        },
+        "group": "nodes",
+        "removed": false,
+        "selected": false,
+        "selectable": true,
+        "locked": false,
+        "grabbable": true,
+        "pannable": false,
+        "classes": ""
+      },
+      {
+        "data": {
+          "id": "n:GSK3β",
+          "label": "GSK3β"
+        },
+        "position": {
+          "x": 317.8779474341278,
+          "y": -15.437219112943719
+        },
+        "group": "nodes",
+        "removed": false,
+        "selected": false,
+        "selectable": true,
+        "locked": false,
+        "grabbable": true,
+        "pannable": false,
+        "classes": ""
+      },
+      {
+        "data": {
+          "id": "n:pTau",
+          "label": "pTau"
+        },
+        "position": {
+          "x": 385.1773596994842,
+          "y": 68.52550924533139
+        },
+        "group": "nodes",
+        "removed": false,
+        "selected": false,
+        "selectable": true,
+        "locked": false,
+        "grabbable": true,
+        "pannable": false,
+        "classes": ""
+      },
+      {
+        "data": {
+          "id": "n:PP2",
+          "label": "PP2"
+        },
+        "position": {
+          "x": 261.3577735370931,
+          "y": 68.28093976211608
+        },
+        "group": "nodes",
+        "removed": false,
+        "selected": false,
+        "selectable": true,
+        "locked": false,
+        "grabbable": true,
+        "pannable": false,
+        "classes": ""
+      },
+      {
+        "data": {
+          "id": "n:lipApoE",
+          "label": "lipApoE"
+        },
+        "position": {
+          "x": 25.421939987824523,
+          "y": -167.31006452448545
+        },
+        "group": "nodes",
+        "removed": false,
+        "selected": false,
+        "selectable": true,
+        "locked": false,
+        "grabbable": true,
+        "pannable": false,
+        "classes": ""
+      },
+      {
+        "data": {
+          "id": "n:ApoE",
+          "label": "ApoE"
+        },
+        "position": {
+          "x": -99.08734770993408,
+          "y": -100.06253243270397
+        },
+        "group": "nodes",
+        "removed": false,
+        "selected": false,
+        "selectable": true,
+        "locked": false,
+        "grabbable": true,
+        "pannable": false,
+        "classes": ""
+      },
+      {
+        "data": {
+          "id": "n:ABCA1",
+          "label": "ABCA1"
+        },
+        "position": {
+          "x": -100.10399532889282,
+          "y": -205.77590126957236
+        },
+        "group": "nodes",
+        "removed": false,
+        "selected": false,
+        "selectable": true,
+        "locked": false,
+        "grabbable": true,
+        "pannable": false,
+        "classes": ""
+      },
+      {
+        "data": {
+          "id": "n:LRP1",
+          "label": "LRP1"
+        },
+        "position": {
+          "x": -52.81105853080386,
+          "y": -126.18421726899514
+        },
+        "group": "nodes",
+        "removed": false,
+        "selected": false,
+        "selectable": true,
+        "locked": false,
+        "grabbable": true,
+        "pannable": false,
+        "classes": ""
+      },
+      {
+        "data": {
+          "id": "n:BACE1",
+          "label": "BACE1"
+        },
+        "position": {
+          "x": -66.93911772066667,
+          "y": 130.95449891889325
+        },
+        "group": "nodes",
+        "removed": false,
+        "selected": false,
+        "selectable": true,
+        "locked": false,
+        "grabbable": true,
+        "pannable": false,
+        "classes": ""
+      },
+      {
+        "data": {
+          "id": "n:γ-sec",
+          "label": "γ-sec"
+        },
+        "position": {
+          "x": -78.68809317288932,
+          "y": 95.85233146757419
+        },
+        "group": "nodes",
+        "removed": false,
+        "selected": false,
+        "selectable": true,
+        "locked": false,
+        "grabbable": true,
+        "pannable": false,
+        "classes": ""
+      },
+      {
+        "data": {
+          "id": "n:APP",
+          "label": "APP"
+        },
+        "position": {
+          "x": -193.969551731167,
+          "y": 93.77180254618811
+        },
+        "group": "nodes",
+        "removed": false,
+        "selected": false,
+        "selectable": true,
+        "locked": false,
+        "grabbable": true,
+        "pannable": false,
+        "classes": ""
+      },
+      {
+        "data": {
+          "id": "n:⍺-sec",
+          "label": "⍺-sec"
+        },
+        "position": {
+          "x": -188.81566090291503,
+          "y": 19.161181410609938
+        },
+        "group": "nodes",
+        "removed": false,
+        "selected": false,
+        "selectable": true,
+        "locked": false,
+        "grabbable": true,
+        "pannable": false,
+        "classes": ""
+      },
+      {
+        "data": {
+          "id": "n:BACE2",
+          "label": "BACE2"
+        },
+        "position": {
+          "x": -170.11562985083228,
+          "y": -15.970931353429812
+        },
+        "group": "nodes",
+        "removed": false,
+        "selected": false,
+        "selectable": true,
+        "locked": false,
+        "grabbable": true,
+        "pannable": false,
+        "classes": ""
+      },
+      {
+        "data": {
+          "id": "n:TREM2",
+          "label": "TREM2"
+        },
+        "position": {
+          "x": 137.31664438347087,
+          "y": 125.35754566682947
+        },
+        "group": "nodes",
+        "removed": false,
+        "selected": false,
+        "selectable": true,
+        "locked": false,
+        "grabbable": true,
+        "pannable": false,
+        "classes": ""
+      },
+      {
+        "data": {
+          "id": "n:trnApoE",
+          "label": "trnApoE"
+        },
+        "position": {
+          "x": -190.72050632854112,
+          "y": -100.19663599317428
+        },
+        "group": "nodes",
+        "removed": false,
+        "selected": false,
+        "selectable": true,
+        "locked": false,
+        "grabbable": true,
+        "pannable": false,
+        "classes": ""
+      },
+      {
+        "data": {
+          "id": "n:calpain",
+          "label": "calpain"
+        },
+        "position": {
+          "x": -190.7827666232261,
+          "y": -210.54993919971633
+        },
+        "group": "nodes",
+        "removed": false,
+        "selected": false,
+        "selectable": true,
+        "locked": false,
+        "grabbable": true,
+        "pannable": false,
+        "classes": ""
+      },
+      {
+        "data": {
+          "id": "n:MMPs",
+          "label": "MMPs"
+        },
+        "position": {
+          "x": -257.3346612291125,
+          "y": -210.9669703418548
+        },
+        "group": "nodes",
+        "removed": false,
+        "selected": false,
+        "selectable": true,
+        "locked": false,
+        "grabbable": true,
+        "pannable": false,
+        "classes": ""
+      },
+      {
+        "data": {
+          "id": "n:Aβplaque",
+          "label": "Aβplaque"
+        },
+        "position": {
+          "x": -275.5639409160171,
+          "y": -100.59419411344021
+        },
+        "group": "nodes",
+        "removed": false,
+        "selected": false,
+        "selectable": true,
+        "locked": false,
+        "grabbable": true,
+        "pannable": false,
+        "classes": ""
+      }
+    ],
+    "edges": [
+      {
+        "data": {
+          "id": "e:⍺-sec->Aβ-olig:inhibits",
+          "source": "n:⍺-sec",
+          "target": "n:Aβ-olig",
+          "type": "inhibits",
+          "pmids": [
+            "39232848"
+          ],
+          "note": ""
+        },
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "group": "edges",
+        "removed": false,
+        "selected": false,
+        "selectable": true,
+        "locked": false,
+        "grabbable": false,
+        "pannable": true,
+        "classes": ""
+      },
+      {
+        "data": {
+          "id": "e:Aβ-olig->NMDA:activates",
+          "source": "n:Aβ-olig",
+          "target": "n:NMDA",
+          "type": "activates",
+          "pmids": [
+            "18568035"
+          ],
+          "note": ""
+        },
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "group": "edges",
+        "removed": false,
+        "selected": false,
+        "selectable": true,
+        "locked": false,
+        "grabbable": false,
+        "pannable": true,
+        "classes": ""
+      },
+      {
+        "data": {
+          "id": "e:NMDA->↑↑Ca++:activates",
+          "source": "n:NMDA",
+          "target": "n:↑↑Ca++",
+          "type": "activates",
+          "pmids": [
+            "24742457"
+          ],
+          "note": ""
+        },
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "group": "edges",
+        "removed": false,
+        "selected": false,
+        "selectable": true,
+        "locked": false,
+        "grabbable": false,
+        "pannable": true,
+        "classes": ""
+      },
+      {
+        "data": {
+          "id": "e:↑↑Ca++->CDK5:activates",
+          "source": "n:↑↑Ca++",
+          "target": "n:CDK5",
+          "type": "activates",
+          "pmids": [
+            "10748088"
+          ],
+          "note": ""
+        },
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "group": "edges",
+        "removed": false,
+        "selected": false,
+        "selectable": true,
+        "locked": false,
+        "grabbable": false,
+        "pannable": true,
+        "classes": ""
+      },
+      {
+        "data": {
+          "id": "e:↑↑Ca++->GSK3β:activates",
+          "source": "n:↑↑Ca++",
+          "target": "n:GSK3β",
+          "type": "activates",
+          "pmids": [
+            "25641096"
+          ],
+          "note": ""
+        },
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "group": "edges",
+        "removed": false,
+        "selected": false,
+        "selectable": true,
+        "locked": false,
+        "grabbable": false,
+        "pannable": true,
+        "classes": ""
+      },
+      {
+        "data": {
+          "id": "e:GSK3β->pTau:activates",
+          "source": "n:GSK3β",
+          "target": "n:pTau",
+          "type": "activates",
+          "pmids": [
+            "19782073"
+          ],
+          "note": ""
+        },
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "group": "edges",
+        "removed": false,
+        "selected": false,
+        "selectable": true,
+        "locked": false,
+        "grabbable": false,
+        "pannable": true,
+        "classes": ""
+      },
+      {
+        "data": {
+          "id": "e:CDK5->pTau:activates",
+          "source": "n:CDK5",
+          "target": "n:pTau",
+          "type": "activates",
+          "pmids": [
+            "10604467"
+          ],
+          "note": ""
+        },
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "group": "edges",
+        "removed": false,
+        "selected": false,
+        "selectable": true,
+        "locked": false,
+        "grabbable": false,
+        "pannable": true,
+        "classes": ""
+      },
+      {
+        "data": {
+          "id": "e:NMDA->PP2:inhibits",
+          "source": "n:NMDA",
+          "target": "n:PP2",
+          "type": "inhibits",
+          "pmids": [
+            "11588171"
+          ],
+          "note": ""
+        },
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "group": "edges",
+        "removed": false,
+        "selected": false,
+        "selectable": true,
+        "locked": false,
+        "grabbable": false,
+        "pannable": true,
+        "classes": ""
+      },
+      {
+        "data": {
+          "id": "e:PP2->pTau:inhibits",
+          "source": "n:PP2",
+          "target": "n:pTau",
+          "type": "inhibits",
+          "pmids": [
+            "8982166"
+          ],
+          "note": ""
+        },
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "group": "edges",
+        "removed": false,
+        "selected": false,
+        "selectable": true,
+        "locked": false,
+        "grabbable": false,
+        "pannable": true,
+        "classes": ""
+      },
+      {
+        "data": {
+          "id": "e:lipApoE->Aβ-olig:activates",
+          "source": "n:lipApoE",
+          "target": "n:Aβ-olig",
+          "type": "activates",
+          "pmids": [
+            "23100439"
+          ],
+          "note": ""
+        },
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "group": "edges",
+        "removed": false,
+        "selected": false,
+        "selectable": true,
+        "locked": false,
+        "grabbable": false,
+        "pannable": true,
+        "classes": ""
+      },
+      {
+        "data": {
+          "id": "e:BACE2->Aβ-olig:inhibits",
+          "source": "n:BACE2",
+          "target": "n:Aβ-olig",
+          "type": "inhibits",
+          "pmids": [
+            "39232848"
+          ],
+          "note": ""
+        },
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "group": "edges",
+        "removed": false,
+        "selected": false,
+        "selectable": true,
+        "locked": false,
+        "grabbable": false,
+        "pannable": true,
+        "classes": ""
+      },
+      {
+        "data": {
+          "id": "e:ApoE->Aβ-olig:inhibits",
+          "source": "n:ApoE",
+          "target": "n:Aβ-olig",
+          "type": "inhibits",
+          "pmids": [
+            "11120756"
+          ],
+          "note": ""
+        },
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "group": "edges",
+        "removed": false,
+        "selected": false,
+        "selectable": true,
+        "locked": false,
+        "grabbable": false,
+        "pannable": true,
+        "classes": ""
+      },
+      {
+        "data": {
+          "id": "e:ABCA1->lipApoE:activates",
+          "source": "n:ABCA1",
+          "target": "n:lipApoE",
+          "type": "activates",
+          "pmids": [
+            "15269217"
+          ],
+          "note": ""
+        },
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "group": "edges",
+        "removed": false,
+        "selected": false,
+        "selectable": true,
+        "locked": false,
+        "grabbable": false,
+        "pannable": true,
+        "classes": ""
+      },
+      {
+        "data": {
+          "id": "e:ABCA1->ApoE:inhibits",
+          "source": "n:ABCA1",
+          "target": "n:ApoE",
+          "type": "inhibits",
+          "pmids": [
+            "15269217"
+          ],
+          "note": ""
+        },
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "group": "edges",
+        "removed": false,
+        "selected": false,
+        "selectable": true,
+        "locked": false,
+        "grabbable": false,
+        "pannable": true,
+        "classes": ""
+      },
+      {
+        "data": {
+          "id": "e:LRP1->Aβ-olig:inhibits",
+          "source": "n:LRP1",
+          "target": "n:Aβ-olig",
+          "type": "inhibits",
+          "pmids": [
+            "11120756"
+          ],
+          "note": ""
+        },
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "group": "edges",
+        "removed": false,
+        "selected": false,
+        "selectable": true,
+        "locked": false,
+        "grabbable": false,
+        "pannable": true,
+        "classes": ""
+      },
+      {
+        "data": {
+          "id": "e:BACE1->Aβ-olig:activates",
+          "source": "n:BACE1",
+          "target": "n:Aβ-olig",
+          "type": "activates",
+          "pmids": [
+            "39232848"
+          ],
+          "note": ""
+        },
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "group": "edges",
+        "removed": false,
+        "selected": false,
+        "selectable": true,
+        "locked": false,
+        "grabbable": false,
+        "pannable": true,
+        "classes": ""
+      },
+      {
+        "data": {
+          "id": "e:γ-sec->Aβ-olig:activates",
+          "source": "n:γ-sec",
+          "target": "n:Aβ-olig",
+          "type": "activates",
+          "pmids": [
+            "39232848"
+          ],
+          "note": ""
+        },
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "group": "edges",
+        "removed": false,
+        "selected": false,
+        "selectable": true,
+        "locked": false,
+        "grabbable": false,
+        "pannable": true,
+        "classes": ""
+      },
+      {
+        "data": {
+          "id": "e:APP->Aβ-olig:activates",
+          "source": "n:APP",
+          "target": "n:Aβ-olig",
+          "type": "activates",
+          "pmids": [
+            "39232848"
+          ],
+          "note": ""
+        },
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "group": "edges",
+        "removed": false,
+        "selected": false,
+        "selectable": true,
+        "locked": false,
+        "grabbable": false,
+        "pannable": true,
+        "classes": ""
+      },
+      {
+        "data": {
+          "id": "e:Aβ-olig->TREM2:activates",
+          "source": "n:Aβ-olig",
+          "target": "n:TREM2",
+          "type": "activates",
+          "pmids": [
+            "27477018"
+          ],
+          "note": ""
+        },
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "group": "edges",
+        "removed": false,
+        "selected": false,
+        "selectable": true,
+        "locked": false,
+        "grabbable": false,
+        "pannable": true,
+        "classes": ""
+      },
+      {
+        "data": {
+          "id": "e:trnApoE->Aβ-olig:activates",
+          "source": "n:trnApoE",
+          "target": "n:Aβ-olig",
+          "type": "activates",
+          "pmids": [
+            "22929359"
+          ],
+          "note": ""
+        },
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "group": "edges",
+        "removed": false,
+        "selected": false,
+        "selectable": true,
+        "locked": false,
+        "grabbable": false,
+        "pannable": true,
+        "classes": ""
+      },
+      {
+        "data": {
+          "id": "e:calpain->trnApoE:activates",
+          "source": "n:calpain",
+          "target": "n:trnApoE",
+          "type": "activates",
+          "pmids": [
+            "22929359"
+          ],
+          "note": ""
+        },
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "group": "edges",
+        "removed": false,
+        "selected": false,
+        "selectable": true,
+        "locked": false,
+        "grabbable": false,
+        "pannable": true,
+        "classes": ""
+      },
+      {
+        "data": {
+          "id": "e:calpain->ApoE:inhibits",
+          "source": "n:calpain",
+          "target": "n:ApoE",
+          "type": "inhibits",
+          "pmids": [
+            "22929359"
+          ],
+          "note": ""
+        },
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "group": "edges",
+        "removed": false,
+        "selected": false,
+        "selectable": true,
+        "locked": false,
+        "grabbable": false,
+        "pannable": true,
+        "classes": ""
+      },
+      {
+        "data": {
+          "id": "e:MMPs->trnApoE:activates",
+          "source": "n:MMPs",
+          "target": "n:trnApoE",
+          "type": "activates",
+          "pmids": [
+            "22929359"
+          ],
+          "note": ""
+        },
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "group": "edges",
+        "removed": false,
+        "selected": false,
+        "selectable": true,
+        "locked": false,
+        "grabbable": false,
+        "pannable": true,
+        "classes": ""
+      },
+      {
+        "data": {
+          "id": "e:MMPs->ApoE:inhibits",
+          "source": "n:MMPs",
+          "target": "n:ApoE",
+          "type": "inhibits",
+          "pmids": [
+            "22929359"
+          ],
+          "note": ""
+        },
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "group": "edges",
+        "removed": false,
+        "selected": false,
+        "selectable": true,
+        "locked": false,
+        "grabbable": false,
+        "pannable": true,
+        "classes": ""
+      },
+      {
+        "data": {
+          "id": "e:trnApoE->Aβplaque:activates",
+          "source": "n:trnApoE",
+          "target": "n:Aβplaque",
+          "type": "activates",
+          "pmids": [
+            "22929359"
+          ],
+          "note": ""
+        },
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "group": "edges",
+        "removed": false,
+        "selected": false,
+        "selectable": true,
+        "locked": false,
+        "grabbable": false,
+        "pannable": true,
+        "classes": ""
+      }
+    ]
+  },
+  "positions": [
+    {
+      "id": "n:Aβ-olig",
+      "position": {
+        "x": 26,
+        "y": 26
+      }
+    },
+    {
+      "id": "n:NMDA",
+      "position": {
+        "x": 138,
+        "y": 26
+      }
+    },
+    {
+      "id": "n:↑↑Ca++",
+      "position": {
+        "x": 209.83350245774162,
+        "y": -57.22035538830673
+      }
+    },
+    {
+      "id": "n:CDK5",
+      "position": {
+        "x": 332.70235311391104,
+        "y": -68.52718011345402
+      }
+    },
+    {
+      "id": "n:GSK3β",
+      "position": {
+        "x": 317.8779474341278,
+        "y": -15.437219112943719
+      }
+    },
+    {
+      "id": "n:pTau",
+      "position": {
+        "x": 385.1773596994842,
+        "y": 68.52550924533139
+      }
+    },
+    {
+      "id": "n:PP2",
+      "position": {
+        "x": 261.3577735370931,
+        "y": 68.28093976211608
+      }
+    },
+    {
+      "id": "n:lipApoE",
+      "position": {
+        "x": 25.421939987824523,
+        "y": -167.31006452448545
+      }
+    },
+    {
+      "id": "n:ApoE",
+      "position": {
+        "x": -99.08734770993408,
+        "y": -100.06253243270397
+      }
+    },
+    {
+      "id": "n:ABCA1",
+      "position": {
+        "x": -100.10399532889282,
+        "y": -205.77590126957236
+      }
+    },
+    {
+      "id": "n:LRP1",
+      "position": {
+        "x": -52.81105853080386,
+        "y": -126.18421726899514
+      }
+    },
+    {
+      "id": "n:BACE1",
+      "position": {
+        "x": -66.93911772066667,
+        "y": 130.95449891889325
+      }
+    },
+    {
+      "id": "n:γ-sec",
+      "position": {
+        "x": -78.68809317288932,
+        "y": 95.85233146757419
+      }
+    },
+    {
+      "id": "n:APP",
+      "position": {
+        "x": -193.969551731167,
+        "y": 93.77180254618811
+      }
+    },
+    {
+      "id": "n:⍺-sec",
+      "position": {
+        "x": -188.81566090291503,
+        "y": 19.161181410609938
+      }
+    },
+    {
+      "id": "n:BACE2",
+      "position": {
+        "x": -170.11562985083228,
+        "y": -15.970931353429812
+      }
+    },
+    {
+      "id": "n:TREM2",
+      "position": {
+        "x": 137.31664438347087,
+        "y": 125.35754566682947
+      }
+    },
+    {
+      "id": "n:trnApoE",
+      "position": {
+        "x": -190.72050632854112,
+        "y": -100.19663599317428
+      }
+    },
+    {
+      "id": "n:calpain",
+      "position": {
+        "x": -190.7827666232261,
+        "y": -210.54993919971633
+      }
+    },
+    {
+      "id": "n:MMPs",
+      "position": {
+        "x": -257.3346612291125,
+        "y": -210.9669703418548
+      }
+    },
+    {
+      "id": "n:Aβplaque",
+      "position": {
+        "x": -275.5639409160171,
+        "y": -100.59419411344021
+      }
+    }
+  ],
+  "viewport": {
+    "zoom": 1.2098412655505508,
+    "pan": {
+      "x": 516.8088445801965,
+      "y": 413.9391284532735
+    }
+  }
+}
