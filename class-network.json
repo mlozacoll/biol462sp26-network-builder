@@ -367,8 +367,26 @@
           "label": "Aβplaque"
         },
         "position": {
-          "x": -275.5639409160171,
-          "y": -100.59419411344021
+          "x": -313.58545771315426,
+          "y": -99.76763940045898
+        },
+        "group": "nodes",
+        "removed": false,
+        "selected": false,
+        "selectable": true,
+        "locked": false,
+        "grabbable": true,
+        "pannable": false,
+        "classes": ""
+      },
+      {
+        "data": {
+          "id": "n:miR-33",
+          "label": "miR-33"
+        },
+        "position": {
+          "x": -1.1258632142559755,
+          "y": -246.68821410688304
         },
         "group": "nodes",
         "removed": false,
@@ -599,14 +617,14 @@
       },
       {
         "data": {
-          "id": "e:lipApoE->Aβ-olig:activates",
-          "source": "n:lipApoE",
-          "target": "n:Aβ-olig",
+          "id": "e:ABCA1->ApoE:activates",
+          "source": "n:ABCA1",
+          "target": "n:ApoE",
           "type": "activates",
           "pmids": [
-            "23100439"
+            "25957561"
           ],
-          "note": ""
+          "note": "25957561 shows ABCA1 promotes ApoE secretion"
         },
         "position": {
           "x": 0,
@@ -617,7 +635,7 @@
         "selected": false,
         "selectable": true,
         "locked": false,
-        "grabbable": false,
+        "grabbable": true,
         "pannable": true,
         "classes": ""
       },
@@ -676,9 +694,10 @@
           "target": "n:lipApoE",
           "type": "activates",
           "pmids": [
-            "15269217"
+            "15269217",
+            "18549781"
           ],
-          "note": ""
+          "note": "18549781 shows that ApoE lipidation by ABCA1 is required for ApoE to inhibit Ab levels"
         },
         "position": {
           "x": 0,
@@ -695,12 +714,12 @@
       },
       {
         "data": {
-          "id": "e:ABCA1->ApoE:inhibits",
-          "source": "n:ABCA1",
-          "target": "n:ApoE",
-          "type": "inhibits",
+          "id": "e:trnApoE->Aβplaque:activates",
+          "source": "n:trnApoE",
+          "target": "n:Aβplaque",
+          "type": "activates",
           "pmids": [
-            "15269217"
+            "22929359"
           ],
           "note": ""
         },
@@ -959,12 +978,36 @@
       },
       {
         "data": {
-          "id": "e:trnApoE->Aβplaque:activates",
-          "source": "n:trnApoE",
-          "target": "n:Aβplaque",
-          "type": "activates",
+          "id": "e:lipApoE->Aβ-olig:inhibits",
+          "source": "n:lipApoE",
+          "target": "n:Aβ-olig",
+          "type": "inhibits",
           "pmids": [
-            "22929359"
+            "18549781"
+          ],
+          "note": "18549781 shows that ApoE lipidation by ABCA1 is required for ApoE to inhibit levels of Aβ"
+        },
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "group": "edges",
+        "removed": false,
+        "selected": false,
+        "selectable": true,
+        "locked": false,
+        "grabbable": true,
+        "pannable": true,
+        "classes": ""
+      },
+      {
+        "data": {
+          "id": "e:miR-33->ABCA1:inhibits",
+          "source": "n:miR-33",
+          "target": "n:ABCA1",
+          "type": "inhibits",
+          "pmids": [
+            "25957561"
           ],
           "note": ""
         },
@@ -977,7 +1020,7 @@
         "selected": false,
         "selectable": true,
         "locked": false,
-        "grabbable": false,
+        "grabbable": true,
         "pannable": true,
         "classes": ""
       }
@@ -1127,8 +1170,15 @@
     {
       "id": "n:Aβplaque",
       "position": {
-        "x": -275.5639409160171,
-        "y": -100.59419411344021
+        "x": -313.58545771315426,
+        "y": -99.76763940045898
+      }
+    },
+    {
+      "id": "n:miR-33",
+      "position": {
+        "x": -1.1258632142559755,
+        "y": -246.68821410688304
       }
     }
   ],
