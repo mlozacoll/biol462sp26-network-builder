@@ -289,6 +289,9 @@
     ],
     layout: { name: "grid" }
   });
+
+  console.log("initialElements.length =", initialElements.length);
+  console.log("cy.elements().length (after init) =", cy.elements().length);
   
   // Prevent edges from ever being “grabbed”
   cy.edges().ungrabify();
@@ -470,6 +473,39 @@ function runLayout() {
 
   if (!saved?.positions?.length) runLayout();
 
+// ---- Ensure viewer actually shows the graph ----
+// sometimes Cytoscape initializes before the DOM/iframe has final size, which
+// can leave the graph off-screen or invisibly zoomed. Force a resize+fit
+// shortly after load (and also when window resizes).
+setTimeout(() => {
+  try {
+    console.log("post-init: cy.elements().length =", cy.elements().length);
+    if (cy.elements().length > 0) {
+      cy.resize();        // tell cytoscape its container size may have changed
+      cy.fit(undefined, 40); // fit graph into view with some padding
+      // optional: center() instead of fit() if you prefer
+      // cy.center();
+    }
+  } catch (err) {
+    console.error("cy fit error:", err);
+  }
+}, 100);
+
+// Also re-fit on window resize (useful for responsive/iframe environments)
+window.addEventListener("resize", () => {
+  try {
+    if (cy && cy.elements().length > 0) {
+      cy.resize();
+      // don't always call fit on resize (that can be annoying);
+      // here we do a gentle recenter if zoom level is extreme:
+      const z = cy.zoom();
+      if (z < 0.05 || z > 10) {
+        cy.fit(undefined, 40);
+      }
+    }
+  } catch (e) { /* ignore */ }
+});
+  
 // --- Activate PMID links
 function pmidLink(pmid) {
   const clean = String(pmid).trim();
