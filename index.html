@@ -91,7 +91,11 @@
         <button id="exportJson">Export JSON</button>
         <button id="importJson">Import JSON</button>
       </div>
-
+      
+      <div class="btnrow">
+        <button id="publishJson">Publish Class JSON</button>
+      </div>
+      
       <div class="hint">
         <div class="small">
           Tips:
@@ -175,10 +179,54 @@
     return;
   }
 
+// ---- VIEWER FALLBACK: if localStorage has no network, load the published class JSON ----
+const PUBLISHED_NETWORK_URL = "class-network.json";
+
+async function tryLoadPublishedNetworkIfEmpty() {
+  if (cy.elements().length > 0) return; // we already have something
+
+  try {
+    const resp = await fetch(PUBLISHED_NETWORK_URL, { cache: "no-store" });
+    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+
+    const payload = await resp.json();
+    if (!payload?.elements) throw new Error("Missing 'elements' in class-network.json");
+
+    cy.elements().remove();
+    cy.add(payload.elements);
+
+    // positions (optional)
+    if (payload?.positions?.length) {
+      for (const p of payload.positions) {
+        const n = cy.getElementById(p.id);
+        if (!n.empty() && p.position) n.position(p.position);
+      }
+    }
+
+    // viewport (optional)
+    if (payload?.viewport) {
+      if (typeof payload.viewport.zoom === "number") cy.zoom(payload.viewport.zoom);
+      if (payload.viewport.pan) cy.pan(payload.viewport.pan);
+    } else {
+      cy.fit(undefined, 40);
+    }
+
+    // IMPORTANT: re-measure container (helps if embedded / layout not settled)
+    cy.resize();
+
+    setStatusText("Loaded published class network.");
+  } catch (err) {
+    console.error("Could not load published network:", err);
+    setStatusText("No saved network found in this browser, and no published class-network.json found.");
+  }
+}
+
+tryLoadPublishedNetworkIfEmpty();
+    
   // VIEW-ONLY: hide editing controls
   const idsToHide = [
     "source","target","itype","autolayout","pmid","note",
-    "addEdge","clear","exportSvg","deleteNode","deleteEdge","importJson","doImport","jsonBox"
+    "addEdge","clear","exportSvg","deleteNode","deleteEdge","importJson","doImport","jsonBox","publishJson"
   ];
 
   for (const id of idsToHide) {
@@ -290,9 +338,6 @@
     layout: { name: "grid" }
   });
 
-  console.log("initialElements.length =", initialElements.length);
-  console.log("cy.elements().length (after init) =", cy.elements().length);
-  
   // Prevent edges from ever being “grabbed”
   cy.edges().ungrabify();
 
@@ -479,7 +524,6 @@ function runLayout() {
 // shortly after load (and also when window resizes).
 setTimeout(() => {
   try {
-    console.log("post-init: cy.elements().length =", cy.elements().length);
     if (cy.elements().length > 0) {
       cy.resize();        // tell cytoscape its container size may have changed
       cy.fit(undefined, 40); // fit graph into view with some padding
@@ -746,6 +790,26 @@ function ensureNode(gene) {
     jsonBox.focus();
   });
 
+  document.getElementById("publishJson")?.addEventListener("click", () => {
+  if (IS_VIEW_ONLY) {
+    setStatusText("View-only mode: publishing is disabled.");
+    return;
+  }
+
+  const elements = cy.json().elements;
+  const positions = cy.nodes().map(n => ({
+    id: n.id(),
+    position: { ...n.position() }
+  }));
+  const viewport = { zoom: cy.zoom(), pan: { ...cy.pan() } };
+  const payload = { elements, positions, viewport };
+
+  const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
+  downloadBlob("class-network.json", blob);
+
+  setStatusText("Downloaded class-network.json. Commit it to publish updates.");
+  });
+  
   doImportBtn.addEventListener("click", () => {
     if (IS_VIEW_ONLY) {
      setStatusText("View-only mode: editing is disabled.");
