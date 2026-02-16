@@ -133,8 +133,8 @@
           "label": "lipApoE"
         },
         "position": {
-          "x": 545.1036627505183,
-          "y": 186.294402211472
+          "x": 470.0808569454042,
+          "y": 175.4803040774015
         },
         "group": "nodes",
         "removed": false,
@@ -187,8 +187,8 @@
           "label": "LRP1"
         },
         "position": {
-          "x": 463.3220456116102,
-          "y": 178.11057360055284
+          "x": 548.4830684174153,
+          "y": 175.40704906703522
         },
         "group": "nodes",
         "removed": false,
@@ -423,6 +423,42 @@
         "position": {
           "x": 326.8033947135933,
           "y": 177.60537952431903
+        },
+        "group": "nodes",
+        "removed": false,
+        "selected": false,
+        "selectable": true,
+        "locked": false,
+        "grabbable": true,
+        "pannable": false,
+        "classes": ""
+      },
+      {
+        "data": {
+          "id": "n:ADAM10/17",
+          "label": "ADAM10/17"
+        },
+        "position": {
+          "x": 657.9259427241062,
+          "y": 136.7063993156853
+        },
+        "group": "nodes",
+        "removed": false,
+        "selected": false,
+        "selectable": true,
+        "locked": false,
+        "grabbable": true,
+        "pannable": false,
+        "classes": ""
+      },
+      {
+        "data": {
+          "id": "n:sLRP1",
+          "label": "sLRP1"
+        },
+        "position": {
+          "x": 606.705581943242,
+          "y": 205.9495700388774
         },
         "group": "nodes",
         "removed": false,
@@ -1131,6 +1167,54 @@
         "grabbable": true,
         "pannable": true,
         "classes": ""
+      },
+      {
+        "data": {
+          "id": "e:ADAM10/17->LRP1:inhibits",
+          "source": "n:ADAM10/17",
+          "target": "n:LRP1",
+          "type": "inhibits",
+          "pmids": [
+            "30746765"
+          ],
+          "note": ""
+        },
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "group": "edges",
+        "removed": false,
+        "selected": false,
+        "selectable": true,
+        "locked": false,
+        "grabbable": true,
+        "pannable": true,
+        "classes": ""
+      },
+      {
+        "data": {
+          "id": "e:ADAM10/17->sLRP1:activates",
+          "source": "n:ADAM10/17",
+          "target": "n:sLRP1",
+          "type": "activates",
+          "pmids": [
+            "30746765"
+          ],
+          "note": ""
+        },
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "group": "edges",
+        "removed": false,
+        "selected": false,
+        "selectable": true,
+        "locked": false,
+        "grabbable": true,
+        "pannable": true,
+        "classes": ""
       }
     ]
   },
@@ -1187,8 +1271,8 @@
     {
       "id": "n:lipApoE",
       "position": {
-        "x": 545.1036627505183,
-        "y": 186.294402211472
+        "x": 470.0808569454042,
+        "y": 175.4803040774015
       }
     },
     {
@@ -1208,8 +1292,8 @@
     {
       "id": "n:LRP1",
       "position": {
-        "x": 463.3220456116102,
-        "y": 178.11057360055284
+        "x": 548.4830684174153,
+        "y": 175.40704906703522
       }
     },
     {
@@ -1301,6 +1385,20 @@
       "position": {
         "x": 326.8033947135933,
         "y": 177.60537952431903
+      }
+    },
+    {
+      "id": "n:ADAM10/17",
+      "position": {
+        "x": 657.9259427241062,
+        "y": 136.7063993156853
+      }
+    },
+    {
+      "id": "n:sLRP1",
+      "position": {
+        "x": 606.705581943242,
+        "y": 205.9495700388774
       }
     }
   ],
