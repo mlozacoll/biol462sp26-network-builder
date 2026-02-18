@@ -295,8 +295,8 @@
           "label": "TREM2"
         },
         "position": {
-          "x": 569.879405666897,
-          "y": 303.7512093987561
+          "x": 576.6382170006912,
+          "y": 499.08085694540426
         },
         "group": "nodes",
         "removed": false,
@@ -459,6 +459,60 @@
         "position": {
           "x": 606.705581943242,
           "y": 205.9495700388774
+        },
+        "group": "nodes",
+        "removed": false,
+        "selected": false,
+        "selectable": true,
+        "locked": false,
+        "grabbable": true,
+        "pannable": false,
+        "classes": ""
+      },
+      {
+        "data": {
+          "id": "n:Chk1",
+          "label": "Chk1"
+        },
+        "position": {
+          "x": 546.2824487488956,
+          "y": 259.7945804586317
+        },
+        "group": "nodes",
+        "removed": false,
+        "selected": false,
+        "selectable": true,
+        "locked": false,
+        "grabbable": true,
+        "pannable": false,
+        "classes": ""
+      },
+      {
+        "data": {
+          "id": "n:CIP2",
+          "label": "CIP2"
+        },
+        "position": {
+          "x": 662.1756895133914,
+          "y": 282.5039609666676
+        },
+        "group": "nodes",
+        "removed": false,
+        "selected": false,
+        "selectable": true,
+        "locked": false,
+        "grabbable": true,
+        "pannable": false,
+        "classes": ""
+      },
+      {
+        "data": {
+          "id": "n:pAPP(T668)",
+          "label": "pAPP(T668)"
+        },
+        "position": {
+          "x": 569.7261496333226,
+          "y": 333.7430052748584
         },
         "group": "nodes",
         "removed": false,
@@ -1140,7 +1194,7 @@
         "selected": false,
         "selectable": true,
         "locked": false,
-        "grabbable": true,
+        "grabbable": false,
         "pannable": true,
         "classes": ""
       },
@@ -1164,7 +1218,7 @@
         "selected": false,
         "selectable": true,
         "locked": false,
-        "grabbable": true,
+        "grabbable": false,
         "pannable": true,
         "classes": ""
       },
@@ -1188,7 +1242,7 @@
         "selected": false,
         "selectable": true,
         "locked": false,
-        "grabbable": true,
+        "grabbable": false,
         "pannable": true,
         "classes": ""
       },
@@ -1200,6 +1254,126 @@
           "type": "activates",
           "pmids": [
             "30746765"
+          ],
+          "note": ""
+        },
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "group": "edges",
+        "removed": false,
+        "selected": false,
+        "selectable": true,
+        "locked": false,
+        "grabbable": false,
+        "pannable": true,
+        "classes": ""
+      },
+      {
+        "data": {
+          "id": "e:Aβ-olig->Chk1:activates",
+          "source": "n:Aβ-olig",
+          "target": "n:Chk1",
+          "type": "activates",
+          "pmids": [
+            "35286657"
+          ],
+          "note": ""
+        },
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "group": "edges",
+        "removed": false,
+        "selected": false,
+        "selectable": true,
+        "locked": false,
+        "grabbable": true,
+        "pannable": true,
+        "classes": ""
+      },
+      {
+        "data": {
+          "id": "e:Chk1->CIP2:activates",
+          "source": "n:Chk1",
+          "target": "n:CIP2",
+          "type": "activates",
+          "pmids": [
+            "35286657"
+          ],
+          "note": ""
+        },
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "group": "edges",
+        "removed": false,
+        "selected": false,
+        "selectable": true,
+        "locked": false,
+        "grabbable": true,
+        "pannable": true,
+        "classes": ""
+      },
+      {
+        "data": {
+          "id": "e:CIP2->PP2:inhibits",
+          "source": "n:CIP2",
+          "target": "n:PP2",
+          "type": "inhibits",
+          "pmids": [
+            "35286657"
+          ],
+          "note": ""
+        },
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "group": "edges",
+        "removed": false,
+        "selected": false,
+        "selectable": true,
+        "locked": false,
+        "grabbable": true,
+        "pannable": true,
+        "classes": ""
+      },
+      {
+        "data": {
+          "id": "e:PP2->pAPP(T668):inhibits",
+          "source": "n:PP2",
+          "target": "n:pAPP(T668)",
+          "type": "inhibits",
+          "pmids": [
+            "23922015"
+          ],
+          "note": ""
+        },
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "group": "edges",
+        "removed": false,
+        "selected": false,
+        "selectable": true,
+        "locked": false,
+        "grabbable": true,
+        "pannable": true,
+        "classes": ""
+      },
+      {
+        "data": {
+          "id": "e:pAPP(T668)->Aβ-olig:activates",
+          "source": "n:pAPP(T668)",
+          "target": "n:Aβ-olig",
+          "type": "activates",
+          "pmids": [
+            "14557249"
           ],
           "note": ""
         },
@@ -1334,8 +1508,8 @@
     {
       "id": "n:TREM2",
       "position": {
-        "x": 569.879405666897,
-        "y": 303.7512093987561
+        "x": 576.6382170006912,
+        "y": 499.08085694540426
       }
     },
     {
@@ -1399,6 +1573,27 @@
       "position": {
         "x": 606.705581943242,
         "y": 205.9495700388774
+      }
+    },
+    {
+      "id": "n:Chk1",
+      "position": {
+        "x": 546.2824487488956,
+        "y": 259.7945804586317
+      }
+    },
+    {
+      "id": "n:CIP2",
+      "position": {
+        "x": 662.1756895133914,
+        "y": 282.5039609666676
+      }
+    },
+    {
+      "id": "n:pAPP(T668)",
+      "position": {
+        "x": 569.7261496333226,
+        "y": 333.7430052748584
       }
     }
   ],
