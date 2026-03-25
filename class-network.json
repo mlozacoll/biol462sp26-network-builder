@@ -205,8 +205,8 @@
           "label": "BACE1"
         },
         "position": {
-          "x": 313.38301408408023,
-          "y": 428.032202989007
+          "x": 386.24475918532784,
+          "y": 444.2237019003953
         },
         "group": "nodes",
         "removed": false,
@@ -223,8 +223,8 @@
           "label": "γ-sec"
         },
         "position": {
-          "x": 337.7217528302895,
-          "y": 469.08082969987214
+          "x": 296.08646991529093,
+          "y": 457.51547333459473
         },
         "group": "nodes",
         "removed": false,
@@ -241,8 +241,8 @@
           "label": "APP"
         },
         "position": {
-          "x": 437.80596481199694,
-          "y": 433.90020837360373
+          "x": 462.0932131790795,
+          "y": 436.2132796466592
         },
         "group": "nodes",
         "removed": false,
@@ -603,6 +603,24 @@
         "position": {
           "x": 502.2612439870609,
           "y": 495.84708237133617
+        },
+        "group": "nodes",
+        "removed": false,
+        "selected": false,
+        "selectable": true,
+        "locked": false,
+        "grabbable": true,
+        "pannable": false,
+        "classes": ""
+      },
+      {
+        "data": {
+          "id": "n:MT5-MMP",
+          "label": "MT5-MMP"
+        },
+        "position": {
+          "x": 260.7408825381564,
+          "y": 310.35841599954864
         },
         "group": "nodes",
         "removed": false,
@@ -1695,6 +1713,54 @@
         "grabbable": true,
         "pannable": true,
         "classes": ""
+      },
+      {
+        "data": {
+          "id": "e:Aβ-olig->γ-sec:inhibits",
+          "source": "n:Aβ-olig",
+          "target": "n:γ-sec",
+          "type": "inhibits",
+          "pmids": [
+            "39027984"
+          ],
+          "note": "A-beta peptides inhibit gamma-secretase activity in vitro and in cells"
+        },
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "group": "edges",
+        "removed": false,
+        "selected": false,
+        "selectable": true,
+        "locked": false,
+        "grabbable": true,
+        "pannable": true,
+        "classes": ""
+      },
+      {
+        "data": {
+          "id": "e:MT5-MMP->Aβ-olig:activates",
+          "source": "n:MT5-MMP",
+          "target": "n:Aβ-olig",
+          "type": "activates",
+          "pmids": [
+            "35277173"
+          ],
+          "note": "Under both normal and pro-inflammatory culture conditions, the loss of MT5-MMP leads to a significant drop in the secretion of Abeta-40 and Abeta-42"
+        },
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "group": "edges",
+        "removed": false,
+        "selected": false,
+        "selectable": true,
+        "locked": false,
+        "grabbable": true,
+        "pannable": true,
+        "classes": ""
       }
     ]
   },
@@ -1779,22 +1845,22 @@
     {
       "id": "n:BACE1",
       "position": {
-        "x": 313.38301408408023,
-        "y": 428.032202989007
+        "x": 386.24475918532784,
+        "y": 444.2237019003953
       }
     },
     {
       "id": "n:γ-sec",
       "position": {
-        "x": 337.7217528302895,
-        "y": 469.08082969987214
+        "x": 296.08646991529093,
+        "y": 457.51547333459473
       }
     },
     {
       "id": "n:APP",
       "position": {
-        "x": 437.80596481199694,
-        "y": 433.90020837360373
+        "x": 462.0932131790795,
+        "y": 436.2132796466592
       }
     },
     {
@@ -1936,13 +2002,20 @@
         "x": 502.2612439870609,
         "y": 495.84708237133617
       }
+    },
+    {
+      "id": "n:MT5-MMP",
+      "position": {
+        "x": 260.7408825381564,
+        "y": 310.35841599954864
+      }
     }
   ],
   "viewport": {
-    "zoom": 1.273036866250858,
+    "zoom": 0.803231960555031,
     "pan": {
-      "x": 67.8673274784619,
-      "y": 99.19026744121948
+      "x": 91.52731171092393,
+      "y": 130.78540979506215
     }
   }
 }
