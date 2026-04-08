@@ -205,8 +205,8 @@
           "label": "BACE1"
         },
         "position": {
-          "x": 386.24475918532784,
-          "y": 444.2237019003953
+          "x": 401.184403757872,
+          "y": 515.1870136199802
         },
         "group": "nodes",
         "removed": false,
@@ -223,8 +223,8 @@
           "label": "γ-sec"
         },
         "position": {
-          "x": 296.08646991529093,
-          "y": 457.51547333459473
+          "x": 330.94564058456075,
+          "y": 502.33440705222733
         },
         "group": "nodes",
         "removed": false,
@@ -583,8 +583,8 @@
           "label": "Bin1"
         },
         "position": {
-          "x": 871.7603087610752,
-          "y": 542.9892847458682
+          "x": 399.9165343448876,
+          "y": 620.1774483706797
         },
         "group": "nodes",
         "removed": false,
@@ -621,6 +621,24 @@
         "position": {
           "x": 260.7408825381564,
           "y": 310.35841599954864
+        },
+        "group": "nodes",
+        "removed": false,
+        "selected": false,
+        "selectable": true,
+        "locked": false,
+        "grabbable": true,
+        "pannable": false,
+        "classes": ""
+      },
+      {
+        "data": {
+          "id": "n:RIN3",
+          "label": "RIN3"
+        },
+        "position": {
+          "x": 298.2444505462023,
+          "y": 618.8060620695456
         },
         "group": "nodes",
         "removed": false,
@@ -1761,6 +1779,54 @@
         "grabbable": true,
         "pannable": true,
         "classes": ""
+      },
+      {
+        "data": {
+          "id": "e:Bin1->BACE1:inhibits",
+          "source": "n:Bin1",
+          "target": "n:BACE1",
+          "type": "inhibits",
+          "pmids": [
+            "35241726"
+          ],
+          "note": "Bin1V1 competes with APP for entry into endosomes, which means that Bin1 takes away BACE1's substrate"
+        },
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "group": "edges",
+        "removed": false,
+        "selected": false,
+        "selectable": true,
+        "locked": false,
+        "grabbable": true,
+        "pannable": true,
+        "classes": ""
+      },
+      {
+        "data": {
+          "id": "e:RIN3->Bin1:activates",
+          "source": "n:RIN3",
+          "target": "n:Bin1",
+          "type": "activates",
+          "pmids": [
+            "35241726"
+          ],
+          "note": "RIN3 binds the SH3 domain of Bin1V1, breaking an intramolecular interaction between the SH3 and the CLAP domains in Bin1, and allowing it to bind clathrin and go into early endosomes"
+        },
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "group": "edges",
+        "removed": false,
+        "selected": false,
+        "selectable": true,
+        "locked": false,
+        "grabbable": true,
+        "pannable": true,
+        "classes": ""
       }
     ]
   },
@@ -1845,15 +1911,15 @@
     {
       "id": "n:BACE1",
       "position": {
-        "x": 386.24475918532784,
-        "y": 444.2237019003953
+        "x": 401.184403757872,
+        "y": 515.1870136199802
       }
     },
     {
       "id": "n:γ-sec",
       "position": {
-        "x": 296.08646991529093,
-        "y": 457.51547333459473
+        "x": 330.94564058456075,
+        "y": 502.33440705222733
       }
     },
     {
@@ -1992,8 +2058,8 @@
     {
       "id": "n:Bin1",
       "position": {
-        "x": 871.7603087610752,
-        "y": 542.9892847458682
+        "x": 399.9165343448876,
+        "y": 620.1774483706797
       }
     },
     {
@@ -2008,6 +2074,13 @@
       "position": {
         "x": 260.7408825381564,
         "y": 310.35841599954864
+      }
+    },
+    {
+      "id": "n:RIN3",
+      "position": {
+        "x": 298.2444505462023,
+        "y": 618.8060620695456
       }
     }
   ],
