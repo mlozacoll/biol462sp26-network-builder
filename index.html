@@ -284,7 +284,7 @@ tryLoadPublishedNetworkIfEmpty();
     saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "null");
   } catch (_) {}
 
-  const initialElements = saved?.elements || [];
+  const initialElements = IS_VIEW_ONLY ? [] : (saved?.elements || []);
 
   // --- Cytoscape init ---
   if (typeof cytoscapeDagre !== "undefined") {
