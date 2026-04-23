@@ -183,29 +183,46 @@
 const PUBLISHED_NETWORK_URL = "class-network.json";
 
 async function tryLoadPublishedNetworkIfEmpty() {
-  if (cy.elements().length > 0) return; // we already have something
+  console.log("Viewer loader start. Existing elements:", cy.elements().length);
+
+  if (cy.elements().length > 0) {
+    console.log("Skipping published JSON load because cy already has elements.");
+    return;
+  }
 
   try {
     const resp = await fetch(PUBLISHED_NETWORK_URL, { cache: "no-store" });
+    console.log("Fetch class-network.json status:", resp.status, resp.ok);
+
     if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
 
     const payload = await resp.json();
+    console.log("Payload keys:", Object.keys(payload || {}));
+    console.log("payload.elements exists:", !!payload?.elements);
+    console.log("payload.positions length:", payload?.positions?.length || 0);
+    console.log("payload.viewport:", payload?.viewport || null);
+
     if (!payload?.elements) throw new Error("Missing 'elements' in class-network.json");
 
     cy.elements().remove();
     cy.add(payload.elements);
 
-    // positions (optional)
+    console.log("After cy.add, cy.elements().length =", cy.elements().length);
+    console.log("Nodes:", cy.nodes().length, "Edges:", cy.edges().length);
+
     if (payload?.positions?.length) {
       for (const p of payload.positions) {
         const n = cy.getElementById(p.id);
         if (!n.empty() && p.position) n.position(p.position);
       }
+      console.log("Applied saved positions.");
     }
 
-    // viewport (optional)
+    // Ignore saved viewport in viewer mode
     cy.resize();
     cy.fit(undefined, 40);
+
+    console.log("After fit: zoom =", cy.zoom(), "pan =", cy.pan());
 
     setStatusText("Loaded published class network.");
   } catch (err) {
