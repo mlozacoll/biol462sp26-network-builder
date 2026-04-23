@@ -204,15 +204,8 @@ async function tryLoadPublishedNetworkIfEmpty() {
     }
 
     // viewport (optional)
-    if (payload?.viewport) {
-      if (typeof payload.viewport.zoom === "number") cy.zoom(payload.viewport.zoom);
-      if (payload.viewport.pan) cy.pan(payload.viewport.pan);
-    } else {
-      cy.fit(undefined, 40);
-    }
-
-    // IMPORTANT: re-measure container (helps if embedded / layout not settled)
     cy.resize();
+    cy.fit(undefined, 40);
 
     setStatusText("Loaded published class network.");
   } catch (err) {
