@@ -187,8 +187,8 @@
           "label": "LRP1"
         },
         "position": {
-          "x": 548.4830684174153,
-          "y": 175.40704906703522
+          "x": 852.2558413924806,
+          "y": 306.12893907679694
         },
         "group": "nodes",
         "removed": false,
@@ -295,8 +295,8 @@
           "label": "TREM2"
         },
         "position": {
-          "x": 687.1717562327088,
-          "y": 253.2212089340004
+          "x": 582.8830903702582,
+          "y": 238.14332953220028
         },
         "group": "nodes",
         "removed": false,
@@ -439,8 +439,8 @@
           "label": "ADAM10/17"
         },
         "position": {
-          "x": 657.9259427241062,
-          "y": 136.7063993156853
+          "x": 611.4358145685559,
+          "y": 110.32011036253512
         },
         "group": "nodes",
         "removed": false,
@@ -457,8 +457,8 @@
           "label": "sLRP1"
         },
         "position": {
-          "x": 606.705581943242,
-          "y": 205.9495700388774
+          "x": 551.4200241366417,
+          "y": 178.3067911355772
         },
         "group": "nodes",
         "removed": false,
@@ -639,6 +639,60 @@
         "position": {
           "x": 298.2444505462023,
           "y": 618.8060620695456
+        },
+        "group": "nodes",
+        "removed": false,
+        "selected": false,
+        "selectable": true,
+        "locked": false,
+        "grabbable": true,
+        "pannable": false,
+        "classes": ""
+      },
+      {
+        "data": {
+          "id": "n:LRRK2",
+          "label": "LRRK2"
+        },
+        "position": {
+          "x": 945.3316701679878,
+          "y": 375.8459777981354
+        },
+        "group": "nodes",
+        "removed": false,
+        "selected": false,
+        "selectable": true,
+        "locked": false,
+        "grabbable": true,
+        "pannable": false,
+        "classes": ""
+      },
+      {
+        "data": {
+          "id": "n:ACAT1",
+          "label": "ACAT1"
+        },
+        "position": {
+          "x": 787.0510358556312,
+          "y": 131.2592941390701
+        },
+        "group": "nodes",
+        "removed": false,
+        "selected": false,
+        "selectable": true,
+        "locked": false,
+        "grabbable": true,
+        "pannable": false,
+        "classes": ""
+      },
+      {
+        "data": {
+          "id": "n:sTREM2",
+          "label": "sTREM2"
+        },
+        "position": {
+          "x": 852.1890922396451,
+          "y": 221.37495978322752
         },
         "group": "nodes",
         "removed": false,
@@ -1827,6 +1881,126 @@
         "grabbable": true,
         "pannable": true,
         "classes": ""
+      },
+      {
+        "data": {
+          "id": "e:LRP1->pTau:activates",
+          "source": "n:LRP1",
+          "target": "n:pTau",
+          "type": "activates",
+          "pmids": [
+            "40790356"
+          ],
+          "note": "Inhibition of LRP1 in neurons led to reduced monomeric Tau uptake, indicating that LRP1 can facilitate the uptake of monomeric Tau by neurons, indirectly contributing to pTau"
+        },
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "group": "edges",
+        "removed": false,
+        "selected": false,
+        "selectable": true,
+        "locked": false,
+        "grabbable": true,
+        "pannable": true,
+        "classes": ""
+      },
+      {
+        "data": {
+          "id": "e:LRRK2->pTau:activates",
+          "source": "n:LRRK2",
+          "target": "n:pTau",
+          "type": "activates",
+          "pmids": [
+            "40790356"
+          ],
+          "note": "Inhibition of LRRK2 in neurons led to reduced monomeric Tau uptake, and a constitutively active LRRK2 increased Tau uptake. This indicates that LRRK2 can facilitate the uptake of monomeric Tau by neurons, indirectly contributing to pTau"
+        },
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "group": "edges",
+        "removed": false,
+        "selected": false,
+        "selectable": true,
+        "locked": false,
+        "grabbable": true,
+        "pannable": true,
+        "classes": ""
+      },
+      {
+        "data": {
+          "id": "e:ACAT1->sTREM2:inhibits",
+          "source": "n:ACAT1",
+          "target": "n:sTREM2",
+          "type": "inhibits",
+          "pmids": [
+            "41216966"
+          ],
+          "note": "Inhibition of ACAT1 with AV led to an increase of sTREM2, which induced an LRP1-dependent Abeta uptake by microglia."
+        },
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "group": "edges",
+        "removed": false,
+        "selected": false,
+        "selectable": true,
+        "locked": false,
+        "grabbable": true,
+        "pannable": true,
+        "classes": ""
+      },
+      {
+        "data": {
+          "id": "e:sTREM2->LRP1:activates",
+          "source": "n:sTREM2",
+          "target": "n:LRP1",
+          "type": "activates",
+          "pmids": [
+            "41216966"
+          ],
+          "note": "The sTREM2-mediated uptake of Abeta by microglia was shown to be dependent on LRP1 expression."
+        },
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "group": "edges",
+        "removed": false,
+        "selected": false,
+        "selectable": true,
+        "locked": false,
+        "grabbable": true,
+        "pannable": true,
+        "classes": ""
+      },
+      {
+        "data": {
+          "id": "e:ADAM10/17->sTREM2:activates",
+          "source": "n:ADAM10/17",
+          "target": "n:sTREM2",
+          "type": "activates",
+          "pmids": [
+            "41216966"
+          ],
+          "note": "ADAM10/17 inhibitors fully inhibited the ability of microglia to uptake Abeta in a sTREM2-dependent manner, indicating that ADAM10/17 is the primary protease of TREM2."
+        },
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "group": "edges",
+        "removed": false,
+        "selected": false,
+        "selectable": true,
+        "locked": false,
+        "grabbable": true,
+        "pannable": true,
+        "classes": ""
       }
     ]
   },
@@ -1904,8 +2078,8 @@
     {
       "id": "n:LRP1",
       "position": {
-        "x": 548.4830684174153,
-        "y": 175.40704906703522
+        "x": 852.2558413924806,
+        "y": 306.12893907679694
       }
     },
     {
@@ -1946,8 +2120,8 @@
     {
       "id": "n:TREM2",
       "position": {
-        "x": 687.1717562327088,
-        "y": 253.2212089340004
+        "x": 582.8830903702582,
+        "y": 238.14332953220028
       }
     },
     {
@@ -2002,15 +2176,15 @@
     {
       "id": "n:ADAM10/17",
       "position": {
-        "x": 657.9259427241062,
-        "y": 136.7063993156853
+        "x": 611.4358145685559,
+        "y": 110.32011036253512
       }
     },
     {
       "id": "n:sLRP1",
       "position": {
-        "x": 606.705581943242,
-        "y": 205.9495700388774
+        "x": 551.4200241366417,
+        "y": 178.3067911355772
       }
     },
     {
@@ -2082,13 +2256,34 @@
         "x": 298.2444505462023,
         "y": 618.8060620695456
       }
+    },
+    {
+      "id": "n:LRRK2",
+      "position": {
+        "x": 945.3316701679878,
+        "y": 375.8459777981354
+      }
+    },
+    {
+      "id": "n:ACAT1",
+      "position": {
+        "x": 787.0510358556312,
+        "y": 131.2592941390701
+      }
+    },
+    {
+      "id": "n:sTREM2",
+      "position": {
+        "x": 852.1890922396451,
+        "y": 221.37495978322752
+      }
     }
   ],
   "viewport": {
-    "zoom": 0.803231960555031,
+    "zoom": 0.7958678856767721,
     "pan": {
-      "x": 91.52731171092393,
-      "y": 130.78540979506215
+      "x": 97.83009920187533,
+      "y": 133.1619034426597
     }
   }
 }
