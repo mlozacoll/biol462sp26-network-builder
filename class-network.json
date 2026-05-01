@@ -475,8 +475,8 @@
           "label": "Chk1"
         },
         "position": {
-          "x": 612.6273577437116,
-          "y": 342.4453010754226
+          "x": 572.1575057277227,
+          "y": 344.5206781018836
         },
         "group": "nodes",
         "removed": false,
@@ -493,8 +493,8 @@
           "label": "CIP2"
         },
         "position": {
-          "x": 727.7983641089653,
-          "y": 374.54372877360413
+          "x": 666.5747418283665,
+          "y": 356.9030240486859
         },
         "group": "nodes",
         "removed": false,
@@ -693,6 +693,60 @@
         "position": {
           "x": 852.1890922396451,
           "y": 221.37495978322752
+        },
+        "group": "nodes",
+        "removed": false,
+        "selected": false,
+        "selectable": true,
+        "locked": false,
+        "grabbable": true,
+        "pannable": false,
+        "classes": ""
+      },
+      {
+        "data": {
+          "id": "n:Syk",
+          "label": "Syk"
+        },
+        "position": {
+          "x": 751.0637329166163,
+          "y": 355.10782502402344
+        },
+        "group": "nodes",
+        "removed": false,
+        "selected": false,
+        "selectable": true,
+        "locked": false,
+        "grabbable": true,
+        "pannable": false,
+        "classes": ""
+      },
+      {
+        "data": {
+          "id": "n:p38MAPK",
+          "label": "p38MAPK"
+        },
+        "position": {
+          "x": 815.4853936874287,
+          "y": 407.34412290053535
+        },
+        "group": "nodes",
+        "removed": false,
+        "selected": false,
+        "selectable": true,
+        "locked": false,
+        "grabbable": true,
+        "pannable": false,
+        "classes": ""
+      },
+      {
+        "data": {
+          "id": "n:PCSK6",
+          "label": "PCSK6"
+        },
+        "position": {
+          "x": 90.15849844027406,
+          "y": 354.7945844074014
         },
         "group": "nodes",
         "removed": false,
@@ -2001,6 +2055,126 @@
         "grabbable": true,
         "pannable": true,
         "classes": ""
+      },
+      {
+        "data": {
+          "id": "e:Syk->PP2:inhibits",
+          "source": "n:Syk",
+          "target": "n:PP2",
+          "type": "inhibits",
+          "pmids": [
+            "39233131"
+          ],
+          "note": "This paper shows that inhibiting Syk causes demethylation of PP2A, which forces it into its inactive conformation"
+        },
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "group": "edges",
+        "removed": false,
+        "selected": false,
+        "selectable": true,
+        "locked": false,
+        "grabbable": true,
+        "pannable": true,
+        "classes": ""
+      },
+      {
+        "data": {
+          "id": "e:Syk->GSK3β:activates",
+          "source": "n:Syk",
+          "target": "n:GSK3β",
+          "type": "activates",
+          "pmids": [
+            "39233131"
+          ],
+          "note": "This paper shows that inhibiting Syk causes an increase in inhibitory phosphorylation of GSK3β, suggesting that Syk normally activates GSK3β"
+        },
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "group": "edges",
+        "removed": false,
+        "selected": false,
+        "selectable": true,
+        "locked": false,
+        "grabbable": true,
+        "pannable": true,
+        "classes": ""
+      },
+      {
+        "data": {
+          "id": "e:Syk->p38MAPK:activates",
+          "source": "n:Syk",
+          "target": "n:p38MAPK",
+          "type": "activates",
+          "pmids": [
+            "39233131"
+          ],
+          "note": "This paper shows that inhibiting Syk causes a decrease in p38 phosphorylation, suggesting that Syk normally keeps p38 in its phosphorylated and active state"
+        },
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "group": "edges",
+        "removed": false,
+        "selected": false,
+        "selectable": true,
+        "locked": false,
+        "grabbable": true,
+        "pannable": true,
+        "classes": ""
+      },
+      {
+        "data": {
+          "id": "e:p38MAPK->pTau:activates",
+          "source": "n:p38MAPK",
+          "target": "n:pTau",
+          "type": "activates",
+          "pmids": [
+            "39233131"
+          ],
+          "note": "The intro to this paper claims that it is a well established fact that p38 can phosphorylate Tau"
+        },
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "group": "edges",
+        "removed": false,
+        "selected": false,
+        "selectable": true,
+        "locked": false,
+        "grabbable": true,
+        "pannable": true,
+        "classes": ""
+      },
+      {
+        "data": {
+          "id": "e:PCSK6->MT5-MMP:activates",
+          "source": "n:PCSK6",
+          "target": "n:MT5-MMP",
+          "type": "activates",
+          "pmids": [
+            "38216110"
+          ],
+          "note": "This paper shows that PCSK6 activates MT5-MMP, and claims that this leads to AD pathogenesis. But the evidence cannot rule out an MT5-independent effect of PCSK6 and Abeta peptide formation"
+        },
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "group": "edges",
+        "removed": false,
+        "selected": false,
+        "selectable": true,
+        "locked": false,
+        "grabbable": true,
+        "pannable": true,
+        "classes": ""
       }
     ]
   },
@@ -2190,15 +2364,15 @@
     {
       "id": "n:Chk1",
       "position": {
-        "x": 612.6273577437116,
-        "y": 342.4453010754226
+        "x": 572.1575057277227,
+        "y": 344.5206781018836
       }
     },
     {
       "id": "n:CIP2",
       "position": {
-        "x": 727.7983641089653,
-        "y": 374.54372877360413
+        "x": 666.5747418283665,
+        "y": 356.9030240486859
       }
     },
     {
@@ -2277,13 +2451,34 @@
         "x": 852.1890922396451,
         "y": 221.37495978322752
       }
+    },
+    {
+      "id": "n:Syk",
+      "position": {
+        "x": 751.0637329166163,
+        "y": 355.10782502402344
+      }
+    },
+    {
+      "id": "n:p38MAPK",
+      "position": {
+        "x": 815.4853936874287,
+        "y": 407.34412290053535
+      }
+    },
+    {
+      "id": "n:PCSK6",
+      "position": {
+        "x": 90.15849844027406,
+        "y": 354.7945844074014
+      }
     }
   ],
   "viewport": {
-    "zoom": 0.7958678856767721,
+    "zoom": 0.9636803214548885,
     "pan": {
-      "x": 97.83009920187533,
-      "y": 133.1619034426597
+      "x": 45.40593091775213,
+      "y": 80.71388323444853
     }
   }
 }
